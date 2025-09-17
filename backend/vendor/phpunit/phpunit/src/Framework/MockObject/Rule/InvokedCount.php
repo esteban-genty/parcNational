@@ -9,7 +9,6 @@
  */
 namespace PHPUnit\Framework\MockObject\Rule;
 
-use function sprintf;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\MockObject\Invocation as BaseInvocation;
 
@@ -58,12 +57,12 @@ final class InvokedCount extends InvocationOrder
 
         if ($count !== $this->expectedCount) {
             throw new ExpectationFailedException(
-                sprintf(
+                \sprintf(
                     'Method was expected to be called %d times, ' .
                     'actually called %d times.',
                     $this->expectedCount,
-                    $count,
-                ),
+                    $count
+                )
             );
         }
     }
@@ -90,9 +89,9 @@ final class InvokedCount extends InvocationOrder
                     break;
 
                 default:
-                    $message .= sprintf(
+                    $message .= \sprintf(
                         'was not expected to be called more than %d times.',
-                        $this->expectedCount,
+                        $this->expectedCount
                     );
             }
 
