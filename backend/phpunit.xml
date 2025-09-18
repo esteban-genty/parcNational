@@ -14,17 +14,6 @@
         </testsuite>
     </testsuites>
 
-    <source>
-        <include>
-            <directory suffix=".php">models</directory>
-            <directory suffix=".php">utils</directory>
-            <directory suffix=".php">config</directory>
-        </include>
-        <exclude>
-            <directory>api</directory>
-            <directory>tests</directory>
-        </exclude>
-    </source>
 
     <php>
         <env name="DB_HOST" value="localhost"/>
