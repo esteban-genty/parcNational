@@ -35,19 +35,48 @@ class DatabaseTestHelper {
     }
 
     /**
+     * Initialise la base de données de test
+     */
+    public static function setupDatabase() {
+        $pdo = self::getTestConnection();
+
+        // Lire le fichier SQL de test
+        $sqlFile = __DIR__ . '/parc_national_test.sql';
+        if (!file_exists($sqlFile)) {
+            throw new Exception("Fichier SQL de test introuvable: {$sqlFile}");
+        }
+
+        $sql = file_get_contents($sqlFile);
+
+        // Exécuter le SQL
+        try {
+            $pdo->exec($sql);
+        } catch (PDOException $e) {
+            // Ignorer les erreurs de création de base déjà existante
+            if (strpos($e->getMessage(), 'database exists') === false) {
+                throw $e;
+            }
+        }
+    }
+
+    /**
      * Nettoie les tables pour les tests
      */
     public static function cleanDatabase() {
         $pdo = self::getTestConnection();
-        
+
         $tables = ['reservation', 'visiteur', 'utilisateur', 'camping', 'sentier', 'ressource_naturelle', 'notification', 'carte_membre'];
-        
+
         $pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
-        
+
         foreach ($tables as $table) {
-            $pdo->exec("TRUNCATE TABLE {$table}");
+            // Vérifier si la table existe avant de la tronquer
+            $result = $pdo->query("SHOW TABLES LIKE '{$table}'");
+            if ($result->rowCount() > 0) {
+                $pdo->exec("TRUNCATE TABLE {$table}");
+            }
         }
-        
+
         $pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
     }
 

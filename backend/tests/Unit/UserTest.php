@@ -1,4 +1,3 @@
-require_once __DIR__ . '/../Helper/DataBaseHelper.php';
 <?php
 use PHPUnit\Framework\TestCase;
 
@@ -10,6 +9,7 @@ class UserTest extends TestCase {
     private $user;
 
     protected function setUp(): void {
+        DatabaseTestHelper::setupDatabase();
         $this->db = DatabaseTestHelper::getTestConnection();
         $this->user = new User($this->db);
         DatabaseTestHelper::cleanDatabase();

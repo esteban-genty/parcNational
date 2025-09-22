@@ -1,6 +1,4 @@
 <?php
-require_once __DIR__ . '/../Helper/DatabaseTestHelper.php';
-
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -10,6 +8,7 @@ class AuthenticationFlowTest extends TestCase {
     private $db;
 
     protected function setUp(): void {
+        DatabaseTestHelper::setupDatabase();
         $this->db = DatabaseTestHelper::getTestConnection();
         DatabaseTestHelper::cleanDatabase();
     }

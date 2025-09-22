@@ -22,6 +22,7 @@ spl_autoload_register(function ($class) {
 });
 
 // Configuration des constantes pour les tests
+putenv('PHPUNIT_RUNNING=1');
 if (!defined('JWT_SECRET_KEY')) {
     define('JWT_SECRET_KEY', 'test_secret_key_for_phpunit_tests_only');
 }
