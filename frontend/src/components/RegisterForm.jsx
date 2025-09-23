@@ -13,7 +13,7 @@ export default function RegisterForm() {
 
     try {
       const response = await fetch(
-        "http://localhost/parcNational/backend/controllers/RegisterController.php",
+        "http://localhost/parcNational/backend/controllers/Auth.php?action=register",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -32,13 +32,12 @@ export default function RegisterForm() {
         setMessage(data.error || "Erreur lors de l'inscription");
       }
     } catch (error) {
-      setMessage("Erreur réseau : " + error.message);
+      setMessage("Erreur " + error.message);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Inscription</h2>
       <div>
         <label>Nom :</label>
         <input type="text" value={nom} onChange={(e) => setNom(e.target.value)} required />

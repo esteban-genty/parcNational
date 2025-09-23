@@ -10,23 +10,25 @@ export default function LoginForm() {
 
         try {
         const response = await fetch(
-            "http://localhost/parcNational/backend/controllers/LoginController.php",
+            "http://localhost/parcNational/backend/controllers/Auth.php?action=login",
             {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, motdepasse })
+            body: JSON.stringify({ email, mot_de_passe: motdepasse })
             }
         );
 
         const data = await response.json();
         console.log(data);
         console.log(response);
+        console.log(motdepasse);
+        console.log(email);
 
         if (data.success) {
-            setMessage(data.message || "Inscription réussie");
+            setMessage(data.message || "Connexion réussie");
             setMotDePasse(""); setEmail("");
         } else {
-            setMessage(data.error || "Erreur lors de l'inscription");
+            setMessage(data.error || "Erreur lors de la connexion");
         }
         } catch (error) {
         setMessage("Erreur réseau : " + error.message);
@@ -36,7 +38,6 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2>Connexion</h2>
       <div>
         <label>Email :</label>
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
