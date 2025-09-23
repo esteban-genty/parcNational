@@ -1,7 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../src/database.php';
+require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../src/auth.php';
 
 class AuthTest extends TestCase
