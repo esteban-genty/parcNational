@@ -1,0 +1,22 @@
+.app-header {
+  background-color: #0077ff;
+  color: white;
+  padding: 1.5%;
+}
+
+.app-nav a {
+  color: white;
+  text-decoration: none;
+  margin-right: 35px;
+}
+
+.app-nav a:hover {
+  text-decoration: underline;
+}
+
+.app-footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}

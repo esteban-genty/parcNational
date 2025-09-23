@@ -1,4 +1,5 @@
 import { useState } from "react";
+import bgCalanque from "../assets/bg-calanque.jpg";
 
 export default function RegisterForm() {
 
@@ -39,21 +40,32 @@ export default function RegisterForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Nom :</label>
-        <input type="text" value={nom} onChange={(e) => setNom(e.target.value)} required />
-      </div>
-      <div>
-        <label>Email :</label>
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      </div>
-      <div>
-        <label>Mot de passe :</label>
-        <input type="password" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} required />
-      </div>
-      <button type="submit">S’inscrire</button>
-      {<p>{message}</p>}
-    </form>
+    <>
+      <section className="register-img">
+        <img src={bgCalanque} alt="Inscription" />
+      </section>
+
+      <section className="register">
+        <h1>Inscription</h1>
+        <p>Veuillez entrer vos coordonnées</p>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Nom</label>
+            <input type="text" value={nom} onChange={(e) => setNom(e.target.value)} required />
+          </div>
+          <div>
+            <label>Email</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          </div>
+          <div>
+            <label>Mot de passe</label>
+            <input type="password" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} required />
+          </div>
+          <button type="submit">S’inscrire</button>
+          {message && <p>{message}</p>}
+        </form>
+            <p id="connection">Déjà inscrit ? <a id="link" href="/login">Se connecter</a></p>
+      </section>
+    </>
   );
 }

@@ -1,10 +1,11 @@
 import RegisterForm from "../components/RegisterForm";
+import '../css/root.css'
+import '../css/register.css'
 
 export default function RegisterPage() {
   return (
-    <div>
-      <h1>Inscription</h1>
+    <section className="register-section">
       <RegisterForm />
-    </div>
+    </section>
   );
 }
