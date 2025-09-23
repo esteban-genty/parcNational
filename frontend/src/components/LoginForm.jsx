@@ -10,7 +10,7 @@ export default function LoginForm() {
 
         try {
           const response = await fetch(
-            "http://localhost/parcNational/backend/controllers/Auth.php?action=login",
+            "http://localhost/parcNational/backend/controllers/AuthController.php?action=login",
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },

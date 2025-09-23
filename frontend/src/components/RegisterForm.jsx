@@ -13,7 +13,7 @@ export default function RegisterForm() {
 
     try {
       const response = await fetch(
-        "http://localhost/parcNational/backend/controllers/Auth.php?action=register",
+        "http://localhost/parcNational/backend/controllers/AuthController.php?action=register",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
