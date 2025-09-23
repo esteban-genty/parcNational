@@ -32,12 +32,8 @@ class AuthModel extends Database {
         ]);
     }
 
-    public function login(
-        string $email,
-        string $mot_de_passe
-    ): bool {
-
-        // Requête SQL préparée
+    public function login(string $email, string $mot_de_passe): array|false {
+        
         $sql = "SELECT * FROM UTILISATEUR WHERE email = :email";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([":email" => $email]);

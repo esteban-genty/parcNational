@@ -1,14 +1,14 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+
+session_start();
 
 // Configuration des en-têtes CORS
 header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Content-Type: application/json");
-
+header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Credentials: true");
 
 require_once "../models/AuthModel.php";
 
@@ -63,17 +63,22 @@ class AuthController {
             $result = $login->login($email, $motDePasse);
 
             if ($result) {
+                $_SESSION['user'] = [
+                    "id"    => $result['id'],
+                    "nom"   => $result['nom'],
+                    "email" => $result['email'],
+                    "role"  => $result['role']
+                ];
 
-                //session_start();
-
-                //$_SESSION['user'] = $email;
-
-
-                echo json_encode(["success" => true, "message" => "Connexion réussie"]);
-            } else {
+                echo json_encode([
+                    "success" => true,
+                    "message" => "Connexion réussie, {$_SESSION['user']['nom']}",
+                    "user"    => $_SESSION['user']
+                ]);
+            }else {
                 echo json_encode(["success" => false, "error" => "Email ou mot de passe incorrect"]);
             }
-        } catch (Exception $e) {
+        }catch (Exception $e) {
             http_response_code(500);
             echo json_encode(["success" => false, "error" => $e->getMessage()]);
         }
@@ -106,7 +111,23 @@ class AuthController {
             echo json_encode(["success" => false, "error" => $e->getMessage()]);
         }
     }
+
+    public function checkSession() {
+    if (isset($_SESSION['user'])) {
+        echo json_encode([
+            "loggedIn" => true,
+            "user"     => $_SESSION['user']
+        ]);
+    } else {
+        echo json_encode([
+            "loggedIn" => false
+        ]);
+    }
 }
+
+}
+
+
 
 
 $controller = new AuthController();
@@ -121,6 +142,11 @@ switch ($action) {
     case 'login':
         $controller->handleRequestLogin();
         break;
+
+    case 'check':
+    $controller->checkSession();
+    break;
+
 
     default:
         echo json_encode([

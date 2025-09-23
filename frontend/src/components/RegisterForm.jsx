@@ -22,8 +22,10 @@ export default function RegisterForm() {
       );
 
       const data = await response.json();
+      /*
       console.log(data);
       console.log(response);
+      */
 
       if (data.success) {
         setMessage(data.message || "Inscription réussie");

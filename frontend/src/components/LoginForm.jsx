@@ -9,20 +9,24 @@ export default function LoginForm() {
         event.preventDefault();
 
         try {
-        const response = await fetch(
+          const response = await fetch(
             "http://localhost/parcNational/backend/controllers/Auth.php?action=login",
             {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, mot_de_passe: motdepasse })
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, mot_de_passe: motdepasse }),
+              credentials: "include"
             }
-        );
+          );
+
 
         const data = await response.json();
+        /*
         console.log(data);
         console.log(response);
         console.log(motdepasse);
         console.log(email);
+        */
 
         if (data.success) {
             setMessage(data.message || "Connexion réussie");
