@@ -1,6 +1,6 @@
 <?php
-
-session_start();
+session_destroy();
+//session_start();
 
 // Configuration des en-têtes CORS
 header("Access-Control-Allow-Origin: http://localhost:5173");
@@ -97,12 +97,37 @@ class AuthController {
             $role = $data['role'] ?? "visiteur";
 
             $signin = new AuthModel();
-            $result = $signin->register($nom, $email, $motDePasse, $role);
 
-            if ($result) {
-                echo json_encode(["success" => true, "message" => "Inscription réussie"]);
+            // Vérification de l'email
+            if ($signin->emailExists($email)) {
+                echo json_encode([
+                    "success" => false,
+                    "error" => "Cet email est déjà utilisé."
+                ]);
+                exit;
+            }
+
+            // Insertion et récupération de l'utilisateur
+            $user = $signin->register($nom, $email, $motDePasse, $role);
+
+            if ($user) {
+                $_SESSION['user'] = [
+                    "id"    => $user['id'],
+                    "nom"   => $user['nom'],
+                    "email" => $user['email'],
+                    "role"  => $user['role']
+                ];
+
+                echo json_encode([
+                    "success" => true,
+                    "message" => "Inscription réussie",
+                    "user"    => $_SESSION['user']
+                ]);
             } else {
-                echo json_encode(["success" => false, "error" => "Impossible d'enregistrer l'utilisateur"]);
+                echo json_encode([
+                    "success" => false,
+                    "error" => "Impossible d'enregistrer l'utilisateur"
+                ]);
             }
 
         } catch (Exception $e) {
@@ -110,6 +135,7 @@ class AuthController {
             echo json_encode(["success" => false, "error" => $e->getMessage()]);
         }
     }
+
 
     public function checkSession() {
     if (isset($_SESSION['user'])) {

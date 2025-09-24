@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import bgCalanque from "../assets/bg-calanque.jpg";
 
 export default function RegisterForm() {
@@ -8,6 +9,7 @@ export default function RegisterForm() {
     const [email, setEmail] = useState("");
     const [motDePasse, setMotDePasse] = useState("");
     const [message, setMessage] = useState("");
+    const navigate = useNavigate(); 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -18,7 +20,8 @@ export default function RegisterForm() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nom, email, mot_de_passe: motDePasse })
+          body: JSON.stringify({ nom, email, mot_de_passe: motDePasse }),
+          credentials: "include"
         }
       );
 
@@ -28,9 +31,12 @@ export default function RegisterForm() {
       console.log(response);
       */
 
+      
       if (data.success) {
-        setMessage(data.message || "Inscription réussie");
-        setNom(""); setEmail(""); setMotDePasse("");
+        setNom(""); 
+        setEmail(""); 
+        setMotDePasse("");
+        navigate("/dashboard")
       } else {
         setMessage(data.error || "Erreur lors de l'inscription");
       }
@@ -62,7 +68,7 @@ export default function RegisterForm() {
             <input type="password" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} required />
           </div>
           <button type="submit">S’inscrire</button>
-          {message && <p>{message}</p>}
+          {message && <p id="erreur">{message}</p>}
         </form>
             <p id="connection">Déjà inscrit ? <a id="link" href="/login">Se connecter</a></p>
       </section>

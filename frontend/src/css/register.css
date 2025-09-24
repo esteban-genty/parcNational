@@ -116,3 +116,8 @@ html, body {
     color: #0077ff;
     text-decoration: none;
 }
+
+#erreur{
+    color: rgb(255, 75, 75);
+    font-weight: 600;
+}
