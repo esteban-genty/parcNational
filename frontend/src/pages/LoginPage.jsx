@@ -1,10 +1,9 @@
 import LoginForm from "../components/LoginForm";
 
-export default function LoginPage() {
+export default function LoginPage({ setUser }) {
   return (
     <div>
-      <h1>Connexion</h1>
-      <LoginForm />
+      <LoginForm setUser={setUser} /> 
     </div>
   );
 }

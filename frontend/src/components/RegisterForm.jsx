@@ -2,14 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import bgCalanque from "../assets/bg-calanque.jpg";
 
-export default function RegisterForm() {
-
-    
-    const [nom, setNom] = useState("");
-    const [email, setEmail] = useState("");
-    const [motDePasse, setMotDePasse] = useState("");
-    const [message, setMessage] = useState("");
-    const navigate = useNavigate(); 
+export default function RegisterForm({ setUser }) {
+  const [nom, setNom] = useState("");
+  const [email, setEmail] = useState("");
+  const [motDePasse, setMotDePasse] = useState("");
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -26,17 +24,13 @@ export default function RegisterForm() {
       );
 
       const data = await response.json();
-      /*
-      console.log(data);
-      console.log(response);
-      */
 
-      
       if (data.success) {
         setNom(""); 
         setEmail(""); 
         setMotDePasse("");
-        navigate("/dashboard")
+        setUser(data.user);
+        navigate("/dashboard");
       } else {
         setMessage(data.error || "Erreur lors de l'inscription");
       }
@@ -70,7 +64,9 @@ export default function RegisterForm() {
           <button type="submit">S’inscrire</button>
           {message && <p id="erreur">{message}</p>}
         </form>
-            <p id="connection">Déjà inscrit ? <a id="link" href="/login">Se connecter</a></p>
+        <p id="connection">
+          Déjà inscrit ? <a id="link" href="/login">Se connecter</a>
+        </p>
       </section>
     </>
   );

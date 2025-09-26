@@ -1,13 +1,15 @@
 .app-header {
   background-color: #0077ff;
   color: white;
-  padding: 1.5%;
+  padding: 1.2%;
+  display: flex;
 }
 
 .app-nav a {
   color: white;
   text-decoration: none;
   margin-right: 35px;
+  font-size: 1.1rem;
 }
 
 .app-nav a:hover {
@@ -19,4 +21,17 @@
   color: white;
   text-align: center;
   padding: 10px;
+}
+
+.app-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.nav-right img{
+  width: 29px;
+  height: auto;
 }

@@ -1,6 +1,5 @@
 <?php
-session_destroy();
-//session_start();
+session_start();
 
 // Configuration des en-têtes CORS
 header("Access-Control-Allow-Origin: http://localhost:5173");
@@ -13,41 +12,39 @@ require_once "../models/AuthModel.php";
 
 class AuthController {
 
-    public function handleRequestRegister() {
+    public function handleRequestRegister(): array {
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             http_response_code(200);
-            exit();
+            return ["success" => true];
         }
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            echo json_encode([
+            return [
                 "success" => false,
-                "error" => "Seules les requêtes POST sont autorisées"
-            ]);
-            exit();
+                "error"   => "Seules les requêtes POST sont autorisées"
+            ];
         }
 
-        $this->registerUser();
+        return $this->registerUser();
     }
 
-    public function handleRequestLogin() {
+    public function handleRequestLogin(): array {
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             http_response_code(200);
-            exit();
+            return ["success" => true];
         }
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            echo json_encode([
+            return [
                 "success" => false,
-                "error" => "Seules les requêtes POST sont autorisées"
-            ]);
-            exit();
+                "error"   => "Seules les requêtes POST sont autorisées"
+            ];
         }
 
-        $this->loginUser();
+        return $this->loginUser();
     }
 
-    private function loginUser() {
+    private function loginUser(): array {
         try {
             $data = json_decode(file_get_contents("php://input"), true);
 
@@ -57,6 +54,10 @@ class AuthController {
 
             $email = trim($data['email']);
             $motDePasse = $data['mot_de_passe'];
+
+            // Verifications XSS
+            htmlspecialchars($email);
+            htmlspecialchars($motDePasse);
 
             $login = new AuthModel();
             $result = $login->login($email, $motDePasse);
@@ -69,21 +70,21 @@ class AuthController {
                     "role"  => $result['role']
                 ];
 
-                echo json_encode([
+                return [
                     "success" => true,
                     "message" => "Connexion réussie, {$_SESSION['user']['nom']}",
                     "user"    => $_SESSION['user']
-                ]);
-            }else {
-                echo json_encode(["success" => false, "error" => "Email ou mot de passe incorrect"]);
+                ];
+            } else {
+                return ["success" => false, "error" => "Email ou mot de passe incorrect"];
             }
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             http_response_code(500);
-            echo json_encode(["success" => false, "error" => $e->getMessage()]);
+            return ["success" => false, "error" => $e->getMessage()];
         }
     }
 
-    private function registerUser() {
+    private function registerUser(): array {
         try {
             $data = json_decode(file_get_contents("php://input"), true);
 
@@ -96,18 +97,20 @@ class AuthController {
             $motDePasse = $data['mot_de_passe'];
             $role = $data['role'] ?? "visiteur";
 
+            // Verifications XSS
+            htmlspecialchars($nom);
+            htmlspecialchars($email);
+            htmlspecialchars($motDePasse);
+
             $signin = new AuthModel();
 
-            // Vérification de l'email
             if ($signin->emailExists($email)) {
-                echo json_encode([
+                return [
                     "success" => false,
-                    "error" => "Cet email est déjà utilisé."
-                ]);
-                exit;
+                    "error"   => "Cet email est déjà utilisé."
+                ];
             }
 
-            // Insertion et récupération de l'utilisateur
             $user = $signin->register($nom, $email, $motDePasse, $role);
 
             if ($user) {
@@ -118,63 +121,61 @@ class AuthController {
                     "role"  => $user['role']
                 ];
 
-                echo json_encode([
+                return [
                     "success" => true,
                     "message" => "Inscription réussie",
                     "user"    => $_SESSION['user']
-                ]);
+                ];
             } else {
-                echo json_encode([
+                return [
                     "success" => false,
-                    "error" => "Impossible d'enregistrer l'utilisateur"
-                ]);
+                    "error"   => "Impossible d'enregistrer l'utilisateur"
+                ];
             }
 
         } catch (Exception $e) {
             http_response_code(500);
-            echo json_encode(["success" => false, "error" => $e->getMessage()]);
+            return ["success" => false, "error" => $e->getMessage()];
         }
     }
 
+    public function logoutUser(): array {
+        session_unset();
+        session_destroy();
+        return [
+            "success" => true,
+            "message" => "Déconnexion réussie"
+        ];
+    }
 
-    public function checkSession() {
-    if (isset($_SESSION['user'])) {
-        echo json_encode([
-            "loggedIn" => true,
-            "user"     => $_SESSION['user']
-        ]);
-    } else {
-        echo json_encode([
-            "loggedIn" => false
-        ]);
+    public function checkSession(): array {
+        if (isset($_SESSION['user'])) {
+            return [
+                "loggedIn" => true,
+                "user"     => $_SESSION['user']
+            ];
+        } else {
+            return [
+                "loggedIn" => false
+            ];
+        }
     }
 }
 
-}
 
 $controller = new AuthController();
-
 $action = $_GET['action'] ?? '';
 
-switch ($action) {
-    case 'register':
-        $controller->handleRequestRegister();
-        break;
-
-    case 'login':
-        $controller->handleRequestLogin();
-        break;
-
-    // Ajouter l'action 'check' pour pouvoir vérifier la session lien : http://localhost/parcNational/backend/controllers/AuthController.php?action=check
-    case 'check':
-    $controller->checkSession();
-    break;
+$response = match($action) {
+    'register' => $controller->handleRequestRegister(),
+    'login'    => $controller->handleRequestLogin(),
+    'check'    => $controller->checkSession(),
+    'logout'   => $controller->logoutUser(),
+    default    => [
+        "success" => false,
+        "error"   => "Action non reconnue. Utilisez ?action=register, ?action=login, ?action=check ou ?action=logout"
+    ]
+};
 
 
-    default:
-        echo json_encode([
-            "success" => false,
-            "error" => "Action non reconnue. Utilisez ?action=register ou ?action=login"
-        ]);
-        break;
-}
+echo json_encode($response);
