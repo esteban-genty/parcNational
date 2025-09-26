@@ -37,8 +37,8 @@ export default function LoginPage({ setUser }) {
 
   return (
     <>
-      <section className="register-img">
-        <img src={bgCalanque} alt="Inscription" />
+      <section className="login-img">
+        <img src={bgCalanque} alt="Connexion" />
       </section>
 
       <section className="login">

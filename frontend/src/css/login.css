@@ -11,16 +11,15 @@
     --p-margin-bottom: 30px;
 }
 
-html, body {
-    margin: 0;
-    padding: 0;
+body.login-body{
+    overflow: hidden;
 }
 
 .login-section {
-    display: flex;
-    flex-direction: row-reverse;
-    width: 100%;
-    height: 100vh;
+  display: flex;
+  flex-direction: row-reverse;
+  width: 100%;
+  height: 100vh;
 }
 
 .login h1 {
@@ -98,7 +97,7 @@ html, body {
 
 .login-img {
     width: 50%;
-    height: 92%;
+
 }
 
 .login-img img {
