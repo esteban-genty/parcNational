@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import bgCalanque from "../assets/bg-connexion.jpg";
 
 export default function LoginPage({ setUser }) {
   const [email, setEmail] = useState("");
@@ -35,20 +36,29 @@ export default function LoginPage({ setUser }) {
   };
 
   return (
-    <section className="login">
-      <h1>Connexion</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </div>
-        <div>
-          <label>Mot de passe</label>
-          <input type="password" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} required />
-        </div>
-        <button type="submit">Se connecter</button>
-        {message && <p id="erreur">{message}</p>}
-      </form>
-    </section>
+    <>
+      <section className="register-img">
+        <img src={bgCalanque} alt="Inscription" />
+      </section>
+
+      <section className="login">
+        <h1>Connexion</h1>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Email</label>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          </div>
+          <div>
+            <label>Mot de passe</label>
+            <input type="password" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} required />
+          </div>
+          <button type="submit">Se connecter</button>
+          {message && <p id="erreur">{message}</p>}
+        </form>
+        <p id="connection">
+          Créer un compte ? <a id="link" href="/register">S'inscrire</a>
+        </p>
+      </section>
+    </>
   );
 }

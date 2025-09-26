@@ -1,9 +1,11 @@
 import LoginForm from "../components/LoginForm";
+import '../css/root.css'
+import '../css/login.css'
 
 export default function LoginPage({ setUser }) {
   return (
-    <div>
+    <section className="login-section">
       <LoginForm setUser={setUser} /> 
-    </div>
+    </section>
   );
 }

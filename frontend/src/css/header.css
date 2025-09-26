@@ -31,7 +31,22 @@
   width: 100%;
 }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
 .nav-right img{
   width: 29px;
   height: auto;
+}
+
+.nav-right button {
+  background-color: #ff5656;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
 }
