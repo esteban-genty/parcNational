@@ -51,15 +51,15 @@ export default function WeatherWidget() {
  <section className="weather">
   <ul className="weather-array">
     <li id="temperature">
-      <strong>{weather.temperature}°C</strong>
+      <h4>{weather.temperature}°C</h4>
       <p>Température</p>
     </li>
-    <li>
-      <strong>{weather.windspeed} km/h</strong>
+    <li id="wind-speed">
+      <h4>{weather.windspeed} km/h</h4>
       <p>Vitesse du vent</p>
     </li>
-    <li>
-      <strong>{getWeatherDescription(weather.weathercode)}</strong>
+    <li id="condition">
+      <h4>{getWeatherDescription(weather.weathercode)}</h4>
       <p>Condition</p>
     </li>
   </ul>

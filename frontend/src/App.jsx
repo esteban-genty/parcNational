@@ -87,7 +87,7 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <p>2025 Mon Site</p>
+        <p>Footer</p>
       </footer>
     </>
   );

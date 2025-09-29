@@ -46,12 +46,14 @@ export default function Dashboard() {
       <section className="dashboard-left">
         <nav>
           <ul>
+            <h5 className="dashboard-title">Visiteurs</h5>
             <li><Link to="/dashboard">Tableau de bord</Link></li>
             <li><Link to="sentiers">Gestion des sentiers</Link></li>
             <li><Link to="camping">Réservations camping</Link></li>
             <li><Link to="ressources">Ressources naturelles</Link></li>
+            {user.role === "admin" && <h5 className="dashboard-title">Admin</h5>}
             {user.role === "admin" && <li><Link to="comptes">Gestion des comptes</Link></li>}
-             {user.role === "admin" && <li><Link to="notifications">Gestion des notifcations</Link></li>}
+            {user.role === "admin" && <li><Link to="notifications">Gestion des notifcations</Link></li>}
           </ul>
         </nav>
       </section>
@@ -74,7 +76,9 @@ export default function Dashboard() {
           <p>Rôle : {user.role}</p>
         </section>
 
-        <section className="dashboard-notifications"></section>
+        <section className="dashboard-notifications">
+          <p>Notification...</p>
+        </section>
 
         <section className="dashboard-weather">
           <DashboardWeather />
