@@ -1,0 +1,122 @@
+:root {
+    --font-size-title: 2.5rem;
+    --font-size-input: 16px;
+    --font-size-button: 1.1rem;
+    --input-padding: 10px;
+    --button-padding: 10px 50px;
+    --gap-form: 12px;
+    --border-radius: 4px;
+    --form-margin-bottom: 20px;
+    --label-margin-bottom: 8px;
+    --p-margin-bottom: 30px;
+}
+
+body.login-body{
+    overflow: hidden;
+}
+
+.login-section {
+  display: flex;
+  flex-direction: row-reverse;
+  width: 100%;
+  height: 100vh;
+}
+
+.login h1 {
+    font-weight: 700;
+    font-size: var(--font-size-title);
+}
+
+.login form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 45%;
+    gap: var(--gap-form);
+}
+
+.login form div {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: var(--form-margin-bottom);
+    width: 100%;
+}
+
+.login form input {
+    padding: var(--input-padding);
+    font-size: var(--font-size-input);
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.login form label {
+    margin-bottom: var(--label-margin-bottom);
+    font-weight: 600;
+}
+
+.login p {
+    color: rgb(107, 107, 107);
+    margin-bottom: var(--p-margin-bottom);
+}
+
+.login form button {
+    padding: var(--button-padding);
+    font-size: var(--font-size-button);
+    background-color: #0077ff;
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.login form button:hover {
+    background-color: #005fcc;
+}
+
+.login-section h1 {
+    margin-bottom: 30px;
+}
+
+
+.login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+
+.login-img {
+    width: 50%;
+
+}
+
+.login-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#connection{
+    color: rgb(107, 107, 107);
+    margin-top: 25px;
+}
+
+#link{
+    color: #0077ff;
+    text-decoration: none;
+}
+
+#erreur{
+    color: rgb(255, 75, 75);
+    font-weight: 600;
+}
