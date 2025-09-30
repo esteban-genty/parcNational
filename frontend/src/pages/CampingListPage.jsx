@@ -1,3 +1,4 @@
+// Page liste des campings - affiche la liste via le composant CampingList
 import React from 'react';
 import CampingList from '../components/Camping/CampingList';
 

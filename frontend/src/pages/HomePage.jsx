@@ -1,3 +1,4 @@
+// Ajout d'un teaser cinématique d'accueil avec rideau lumineux et image des Calanques
 import bgHome from "../assets/bg-home.jpeg";
 import '../css/root.css'
 import '../css/home.css'
@@ -17,6 +18,7 @@ import { useState, useEffect } from 'react';
 import './teaser.css';
 
 export default function Home() {
+  // showTeaser contrôle l'affichage du rideau d'ouverture
   const [showTeaser, setShowTeaser] = useState(true);
   useEffect(() => {
     const timer = setTimeout(() => setShowTeaser(false), 4000);
@@ -25,7 +27,8 @@ export default function Home() {
 
   return (
     <div style={{position:'relative',minHeight:'100vh'}}>
-      {showTeaser && (
+  {/* Teaser d'accueil avec effet cinématique et image de fond */}
+  {showTeaser && (
         <div className="teaser-cinematic" style={{
           background: `radial-gradient(ellipse at center, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.85) 100%), url(${bgHome}) center/cover no-repeat`
         }}>
@@ -37,7 +40,8 @@ export default function Home() {
           </div>
         </div>
       )}
-      <div style={{
+  {/* Image des Calanques en haut de la page principale */}
+  <div style={{
         width: '100%',
         height: '320px',
         background: `linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.05) 100%), url(${bgHome}) center/cover no-repeat`,
@@ -49,7 +53,8 @@ export default function Home() {
         position: 'relative',
         zIndex: 0
       }} />
-      <div className="homepage-content" style={{
+  {/* Contenu principal de la page, masqué pendant le teaser */}
+  <div className="homepage-content" style={{
         filter: showTeaser ? 'blur(12px)' : 'none',
         pointerEvents: showTeaser ? 'none' : 'auto',
         opacity: showTeaser ? 0 : 1,

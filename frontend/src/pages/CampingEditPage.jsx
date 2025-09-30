@@ -1,3 +1,4 @@
+// Page édition camping - formulaire d'édition via CampingForm
 import React from 'react';
 import CampingForm from '../components/Camping/CampingForm';
 
