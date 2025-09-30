@@ -60,7 +60,7 @@ class Camping {
     // CRUD : Read all
     public function readAll() {
         $sql = "SELECT * FROM camping";
-        $stmt = $this->db->query($sql);
+        $stmt = $this->db->getConnection()->query($sql);
         return $stmt->fetchAll();
     }
 }

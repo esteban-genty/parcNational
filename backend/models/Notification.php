@@ -53,15 +53,8 @@ class Notification {
 
     // CRUD : Delete
     public function delete($id) {
-        $sql = "DELETE FROM notification WHERE id = ?";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$id]);
-    }
-
-    // CRUD : Read all
-    public function readAll() {
-        $sql = "SELECT * FROM notification";
-        $stmt = $this->db->query($sql);
-        return $stmt->fetchAll();
-    }
+    $sql = "DELETE FROM notification WHERE id = ?";
+    $stmt = $this->db->prepare($sql);
+    return $stmt->execute([$id]);
+}
 }

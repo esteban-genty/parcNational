@@ -55,13 +55,14 @@ class RessourceNaturelle {
     public function delete($id) {
         $sql = "DELETE FROM ressource_naturelle WHERE id = ?";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$id]);
-    }
-
-    // CRUD : Read all
-    public function readAll() {
-        $sql = "SELECT * FROM ressource_naturelle";
-        $stmt = $this->db->query($sql);
-        return $stmt->fetchAll();
+            $stmt->execute([$id]);
+            $data = $stmt->fetch();
+            if ($data) {
+                $this->id = $data['id'];
+                $this->type = $data['type'];
+                $this->nom = $data['nom'];
+                $this->etat = $data['etat'];
+                $this->created_at = isset($data['created_at']) ? $data['created_at'] : null;
+        }
     }
 }
