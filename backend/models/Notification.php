@@ -3,58 +3,56 @@
  * Modèle Notification : représente une notification envoyée aux utilisateurs
  */
 class Notification {
-    public $id;
-    public $titre;
-    public $message;
-    public $date_envoi;
-    public $created_at;
     private $db;
 
     public function __construct($db) {
         $this->db = $db;
     }
 
-    // CRUD : Create
-    public function create() {
-        if (empty($this->titre) || empty($this->message) || empty($this->date_envoi)) {
-            return false;
-        }
-        $sql = "INSERT INTO notification (titre, message, date_envoi) VALUES (?, ?, ?)";
+    public function findAll() {
+        $sql = "SELECT * FROM notification";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$this->titre, $this->message, $this->date_envoi]);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // CRUD : Read (une notification)
-    public function read($id) {
+    public function findById($id) {
         $sql = "SELECT * FROM notification WHERE id = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$id]);
-        $data = $stmt->fetch();
-        if ($data) {
-            $this->id = $data['id'];
-            $this->titre = $data['titre'];
-            $this->message = $data['message'];
-            $this->date_envoi = $data['date_envoi'];
-            $this->created_at = $data['created_at'];
-            return true;
-        }
-        return false;
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // CRUD : Update
-    public function update() {
-        if (empty($this->titre) || empty($this->message) || empty($this->date_envoi) || empty($this->id)) {
-            return false;
-        }
+    public function create($data) {
+        $sql = "INSERT INTO notification (titre, message, date_envoi) VALUES (?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            $data['titre'] ?? null,
+            $data['message'] ?? null,
+            $data['date_envoi'] ?? null
+        ]);
+        $id = $this->db->lastInsertId();
+        return $this->findById($id);
+    }
+
+    public function update($data) {
+        if (empty($data['id'])) return false;
         $sql = "UPDATE notification SET titre = ?, message = ?, date_envoi = ? WHERE id = ?";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$this->titre, $this->message, $this->date_envoi, $this->id]);
+        $stmt->execute([
+            $data['titre'] ?? null,
+            $data['message'] ?? null,
+            $data['date_envoi'] ?? null,
+            $data['id']
+        ]);
+        return $this->findById($data['id']);
     }
 
-    // CRUD : Delete
     public function delete($id) {
-    $sql = "DELETE FROM notification WHERE id = ?";
-    $stmt = $this->db->prepare($sql);
-    return $stmt->execute([$id]);
-}
+        $row = $this->findById($id);
+        $sql = "DELETE FROM notification WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
+        return $row;
+    }
 }

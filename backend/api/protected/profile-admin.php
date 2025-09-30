@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../config/config.php';
-require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../models/Database.php';
 require_once __DIR__ . '/../../models/User.php';
 require_once __DIR__ . '/../../utils/AuthMiddleware.php';
 require_once __DIR__ . '/../../utils/ResponseHelper.php';
@@ -102,5 +102,17 @@ try {
 } catch (Exception $e) {
     error_log("Erreur protected/profile-admin: " . $e->getMessage());
     ResponseHelper::serverError("Erreur lors de la gestion du profil");
+}
+
+class Database {
+    private $conn;
+
+    public function __construct() {
+        // ... code to initialize $this->conn ...
+    }
+
+    public function getConnection() {
+        return $this->conn;
+    }
 }
 ?>

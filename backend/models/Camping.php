@@ -3,64 +3,56 @@
  * Modèle Camping : représente un camping dans le parc national
  */
 class Camping {
-    public $id;
-    public $nom;
-    public $localisation;
-    public $capacite;
-    public $created_at;
     private $db;
 
     public function __construct($db) {
         $this->db = $db;
     }
 
-    // CRUD : Create
-    public function create() {
-        // Validation des données
-        if (empty($this->nom) || $this->capacite <= 0) {
-            // Si le nom est vide ou la capacité <= 0, on refuse la création
-            return false;
-        }
-        $sql = "INSERT INTO camping (nom, localisation, capacite) VALUES (?, ?, ?)";
+    public function findAll() {
+        $sql = "SELECT * FROM camping";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$this->nom, $this->localisation, $this->capacite]);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // CRUD : Read (un camping)
-    public function read($id) {
+    public function findById($id) {
         $sql = "SELECT * FROM camping WHERE id = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$id]);
-        $data = $stmt->fetch();
-        if ($data) {
-            $this->id = $data['id'];
-            $this->nom = $data['nom'];
-            $this->localisation = $data['localisation'];
-            $this->capacite = $data['capacite'];
-            $this->created_at = $data['created_at'];
-            return true;
-        }
-        return false;
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // CRUD : Update
-    public function update() {
+    public function create($data) {
+        $sql = "INSERT INTO camping (nom, localisation, capacite) VALUES (?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            $data['nom'] ?? null,
+            $data['localisation'] ?? null,
+            $data['capacite'] ?? null
+        ]);
+        $id = $this->db->lastInsertId();
+        return $this->findById($id);
+    }
+
+    public function update($data) {
+        if (empty($data['id'])) return false;
         $sql = "UPDATE camping SET nom = ?, localisation = ?, capacite = ? WHERE id = ?";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$this->nom, $this->localisation, $this->capacite, $this->id]);
+        $stmt->execute([
+            $data['nom'] ?? null,
+            $data['localisation'] ?? null,
+            $data['capacite'] ?? null,
+            $data['id']
+        ]);
+        return $this->findById($data['id']);
     }
 
-    // CRUD : Delete
     public function delete($id) {
+        $row = $this->findById($id);
         $sql = "DELETE FROM camping WHERE id = ?";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$id]);
-    }
-
-    // CRUD : Read all
-    public function readAll() {
-        $sql = "SELECT * FROM camping";
-        $stmt = $this->db->getConnection()->query($sql);
-        return $stmt->fetchAll();
+        $stmt->execute([$id]);
+        return $row;
     }
 }

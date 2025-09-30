@@ -3,8 +3,9 @@
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../models/Camping.php';
 
-$db = new Database();
-$camping = new Camping($db);
+
+$db = (new Database())->connect();
+$model = new Camping($db);
 
 header('Content-Type: application/json');
 
@@ -13,25 +14,22 @@ $method = $_SERVER['REQUEST_METHOD'];
 switch ($method) {
     case 'GET':
         if (isset($_GET['id'])) {
-            // Lire un camping
-            if ($camping->read($_GET['id'])) {
+            $camping = $model->findById($_GET['id']);
+            if ($camping) {
                 echo json_encode($camping);
             } else {
                 http_response_code(404);
                 echo json_encode(['error' => 'Camping non trouvé']);
             }
         } else {
-            // Lire tous les campings
-            echo json_encode($camping->readAll());
+            echo json_encode($model->findAll());
         }
         break;
     case 'POST':
         $data = json_decode(file_get_contents('php://input'), true);
-        $camping->nom = $data['nom'] ?? '';
-        $camping->localisation = $data['localisation'] ?? '';
-        $camping->capacite = $data['capacite'] ?? 0;
-        if ($camping->create()) {
-            echo json_encode(['success' => true]);
+        $created = $model->create($data);
+        if ($created) {
+            echo json_encode(['success' => true, 'camping' => $created]);
         } else {
             http_response_code(400);
             echo json_encode(['error' => 'Erreur lors de la création']);
@@ -39,12 +37,9 @@ switch ($method) {
         break;
     case 'PUT':
         $data = json_decode(file_get_contents('php://input'), true);
-        $camping->id = $data['id'] ?? null;
-        $camping->nom = $data['nom'] ?? '';
-        $camping->localisation = $data['localisation'] ?? '';
-        $camping->capacite = $data['capacite'] ?? 0;
-        if ($camping->update()) {
-            echo json_encode(['success' => true]);
+        $updated = $model->update($data);
+        if ($updated) {
+            echo json_encode(['success' => true, 'camping' => $updated]);
         } else {
             http_response_code(400);
             echo json_encode(['error' => 'Erreur lors de la modification']);
@@ -52,8 +47,9 @@ switch ($method) {
         break;
     case 'DELETE':
         $id = $_GET['id'] ?? null;
-        if ($id && $camping->delete($id)) {
-            echo json_encode(['success' => true]);
+        $deleted = $model->delete($id);
+        if ($deleted) {
+            echo json_encode(['success' => true, 'camping' => $deleted]);
         } else {
             http_response_code(400);
             echo json_encode(['error' => 'Erreur lors de la suppression']);

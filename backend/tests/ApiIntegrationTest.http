@@ -1,0 +1,104 @@
+### CRUD concret : Réservations
+POST http://localhost/parcNational/backend/api/reservation.php
+Content-Type: application/json
+
+{
+  "visiteur_id": 1,
+  "camping_id": 1,
+  "date_debut": "2025-10-01",
+  "date_fin": "2025-10-05"
+}
+### Vérification de la liste des réservations (GET)
+GET http://localhost/parcNational/backend/api/reservation.php
+### Lecture d'une réservation précise (GET)
+GET http://localhost/parcNational/backend/api/reservation.php?id=1
+### Modification de la réservation (PUT)
+PUT http://localhost/parcNational/backend/api/reservation.php
+Content-Type: application/json
+
+{
+  "id": 1,
+  "visiteur_id": 1,
+  "camping_id": 1,
+  "date_debut": "2025-10-02",
+  "date_fin": "2025-10-06"
+}
+### Suppression de la réservation (DELETE)
+DELETE http://localhost/parcNational/backend/api/reservation.php?id=1
+
+### CRUD concret : Sentiers
+POST http://localhost/parcNational/backend/api/sentier.php
+Content-Type: application/json
+
+{
+  "nom": "Sentier du Cap Gros",
+  "difficulte": "moyen",
+  "description": "Beau sentier avec vue sur la mer."
+}
+### Vérification de la liste des sentiers (GET)
+GET http://localhost/parcNational/backend/api/sentier.php
+### Lecture d'un sentier précis (GET)
+GET http://localhost/parcNational/backend/api/sentier.php?id=1
+### Modification du sentier (PUT)
+PUT http://localhost/parcNational/backend/api/sentier.php
+Content-Type: application/json
+
+{
+  "id": 1,
+  "nom": "Sentier modifié",
+  "difficulte": "difficile",
+  "description": "Sentier sportif."
+}
+### Suppression du sentier (DELETE)
+DELETE http://localhost/parcNational/backend/api/sentier.php?id=1
+
+### CRUD concret : Cartes membre
+POST http://localhost/parcNational/backend/api/carte_membre.php
+Content-Type: application/json
+
+{
+  "visiteur_id": 1,
+  "numero": "CARD123",
+  "date_expiration": "2026-01-01"
+}
+### Vérification de la liste des cartes membre (GET)
+GET http://localhost/parcNational/backend/api/carte_membre.php
+### Lecture d'une carte membre précise (GET)
+GET http://localhost/parcNational/backend/api/carte_membre.php?id=1
+### Modification de la carte membre (PUT)
+PUT http://localhost/parcNational/backend/api/carte_membre.php
+Content-Type: application/json
+
+{
+  "id": 1,
+  "visiteur_id": 1,
+  "numero": "CARD456",
+  "date_expiration": "2027-01-01"
+}
+### Suppression de la carte membre (DELETE)
+DELETE http://localhost/parcNational/backend/api/carte_membre.php?id=1
+
+### CRUD concret : Notifications
+POST http://localhost/parcNational/backend/api/notification.php
+Content-Type: application/json
+
+{
+  "utilisateur_id": 1,
+  "message": "Bienvenue dans le Parc National!"
+}
+### Vérification de la liste des notifications (GET)
+GET http://localhost/parcNational/backend/api/notification.php
+### Lecture d'une notification précise (GET)
+GET http://localhost/parcNational/backend/api/notification.php?id=1
+### Modification de la notification (PUT)
+PUT http://localhost/parcNational/backend/api/notification.php
+Content-Type: application/json
+
+{
+  "id": 1,
+  "utilisateur_id": 1,
+  "message": "Votre réservation est confirmée."
+}
+### Suppression de la notification (DELETE)
+DELETE http://localhost/parcNational/backend/api/notification.php?id=1
+

@@ -1,8 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../src/auth.php';
+require_once __DIR__ . '/../models/AuthModel.php';
 
 class AuthTest extends TestCase
 {
@@ -10,8 +9,7 @@ class AuthTest extends TestCase
 
     protected function setUp(): void
     {
-        $db = new Database();
-        $this->auth = new Auth($db);
+        $this->auth = new AuthModel();
     }
 
     public function testRegisterAndLogin()
@@ -22,11 +20,13 @@ class AuthTest extends TestCase
         $role = "visiteur";
 
         // Test inscription
-        $result = $this->auth->register($nom, $email, $mot_de_passe, $role);
-        $this->assertTrue($result);
+        $user = $this->auth->register($nom, $email, $mot_de_passe, $role);
+        $this->assertIsArray($user, 'L\'inscription doit retourner un tableau utilisateur');
+        $this->assertEquals($email, $user['email']);
 
         // Test connexion
-        $login = $this->auth->login($email, $mot_de_passe);
-        $this->assertTrue($login);
+        $loginUser = $this->auth->login($email, $mot_de_passe);
+        $this->assertIsArray($loginUser, 'La connexion doit retourner un tableau utilisateur');
+        $this->assertEquals($email, $loginUser['email']);
     }
 }

@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/JWTHandler.php';
 require_once __DIR__ . '/../models/User.php';
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../models/Database.php';
 
 /**
  * Middleware d'authentification pour protéger les routes

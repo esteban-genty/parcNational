@@ -1,7 +1,20 @@
 <?php
-session_start();
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Configuration des en-têtes CORS
+
+// Gestion CORS globale
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header("Access-Control-Allow-Origin: http://localhost:5173");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    header("Access-Control-Allow-Methods: POST, OPTIONS");
+    header("Access-Control-Allow-Credentials: true");
+    http_response_code(200);
+    exit;
+}
 header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
@@ -52,12 +65,13 @@ class AuthController {
                 throw new Exception("Données manquantes");
             }
 
-            $email = trim($data['email']);
-            $motDePasse = $data['mot_de_passe'];
+            $email = htmlspecialchars(trim($data['email']));
+            $motDePasse = htmlspecialchars($data['mot_de_passe']);
 
-            // Verifications XSS
-            htmlspecialchars($email);
-            htmlspecialchars($motDePasse);
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                http_response_code(400);
+                return ["success" => false, "error" => "Email invalide"];
+            }
 
             $login = new AuthModel();
             $result = $login->login($email, $motDePasse);
@@ -69,13 +83,14 @@ class AuthController {
                     "email" => $result['email'],
                     "role"  => $result['role']
                 ];
-
+                http_response_code(200);
                 return [
                     "success" => true,
                     "message" => "Connexion réussie, {$_SESSION['user']['nom']}",
                     "user"    => $_SESSION['user']
                 ];
             } else {
+                http_response_code(401);
                 return ["success" => false, "error" => "Email ou mot de passe incorrect"];
             }
         } catch (Exception $e) {
@@ -92,19 +107,20 @@ class AuthController {
                 throw new Exception("Données manquantes");
             }
 
-            $nom = trim($data['nom']);
-            $email = trim($data['email']);
-            $motDePasse = $data['mot_de_passe'];
-            $role = $data['role'] ?? "visiteur";
+            $nom = htmlspecialchars(trim($data['nom']));
+            $email = htmlspecialchars(trim($data['email']));
+            $motDePasse = htmlspecialchars($data['mot_de_passe']);
+            $role = htmlspecialchars($data['role'] ?? "visiteur");
 
-            // Verifications XSS
-            htmlspecialchars($nom);
-            htmlspecialchars($email);
-            htmlspecialchars($motDePasse);
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                http_response_code(400);
+                return ["success" => false, "error" => "Email invalide"];
+            }
 
             $signin = new AuthModel();
 
             if ($signin->emailExists($email)) {
+                http_response_code(409);
                 return [
                     "success" => false,
                     "error"   => "Cet email est déjà utilisé."
@@ -120,13 +136,14 @@ class AuthController {
                     "email" => $user['email'],
                     "role"  => $user['role']
                 ];
-
+                http_response_code(201);
                 return [
                     "success" => true,
                     "message" => "Inscription réussie",
                     "user"    => $_SESSION['user']
                 ];
             } else {
+                http_response_code(500);
                 return [
                     "success" => false,
                     "error"   => "Impossible d'enregistrer l'utilisateur"
@@ -166,16 +183,26 @@ class AuthController {
 $controller = new AuthController();
 $action = $_GET['action'] ?? '';
 
-$response = match($action) {
-    'register' => $controller->handleRequestRegister(),
-    'login'    => $controller->handleRequestLogin(),
-    'check'    => $controller->checkSession(),
-    'logout'   => $controller->logoutUser(),
-    default    => [
-        "success" => false,
-        "error"   => "Action non reconnue. Utilisez ?action=register, ?action=login, ?action=check ou ?action=logout"
-    ]
-};
+switch ($action) {
+    case 'register':
+        $response = $controller->handleRequestRegister();
+        break;
+    case 'login':
+        $response = $controller->handleRequestLogin();
+        break;
+    case 'check':
+        $response = $controller->checkSession();
+        break;
+    case 'logout':
+        $response = $controller->logoutUser();
+        break;
+    default:
+        $response = [
+            "success" => false,
+            "error"   => "Action non reconnue. Utilisez ?action=register, ?action=login, ?action=check ou ?action=logout"
+        ];
+        break;
+}
 
 
 echo json_encode($response);

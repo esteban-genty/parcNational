@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../../config/config.php';
-require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../../models/Database.php';
 require_once __DIR__ . '/../../models/User.php';
 require_once __DIR__ . '/../../utils/Validator.php';
 require_once __DIR__ . '/../../utils/ResponseHelper.php';
