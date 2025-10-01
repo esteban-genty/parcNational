@@ -3,6 +3,10 @@
  * Modèle Notification : représente une notification envoyée aux utilisateurs
  */
 class Notification {
+    public $id;
+    public $titre;
+    public $message;
+    public $date_envoi;
     private $db;
 
     public function __construct($db) {
@@ -24,12 +28,15 @@ class Notification {
     }
 
     public function create($data) {
+        if (empty($data['titre']) || empty($data['message']) || empty($data['date_envoi'])) {
+            return false;
+        }
         $sql = "INSERT INTO notification (titre, message, date_envoi) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
-            $data['titre'] ?? null,
-            $data['message'] ?? null,
-            $data['date_envoi'] ?? null
+            $data['titre'],
+            $data['message'],
+            $data['date_envoi']
         ]);
         $id = $this->db->lastInsertId();
         return $this->findById($id);
@@ -55,4 +62,9 @@ class Notification {
         $stmt->execute([$id]);
         return $row;
     }
+        // Ajout méthode read pour les tests
+        public function read($id) {
+            $row = $this->findById($id);
+            return $row ? true : false;
+        }
 }
