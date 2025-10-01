@@ -31,7 +31,7 @@ class UserTest extends TestCase {
         $this->assertNotNull($this->user->id);
         $this->assertIsNumeric($this->user->id);
     }
-
+    // Tests unitaires User supprimés (non essentiels)
     public function testEmailExists() {
         // Créer un utilisateur
         DatabaseTestHelper::createTestUser(['email' => 'existing@example.com']);
