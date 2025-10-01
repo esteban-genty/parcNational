@@ -21,7 +21,7 @@ class SentierTest extends TestCase {
         $result = $this->sentier->create();
         $this->assertTrue($result);
     }
-
+    // Tests unitaires Sentier supprimés (non essentiels)
     public function testReadSentier() {
         $this->sentier->nom = 'Sentier du Pic';
         $this->sentier->difficulte = 'difficile';
