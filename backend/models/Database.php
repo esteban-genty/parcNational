@@ -20,4 +20,8 @@ class Database {
         }
         return $this->conn;
     }
+        // Ajout pour compatibilité avec les tests unitaires
+        public function getConnection(): PDO {
+            return $this->connect();
+        }
 }
