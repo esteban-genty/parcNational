@@ -1,4 +1,9 @@
+<?php
 class CarteMembre {
+    public $id;
+    public $numero_carte;
+    public $type_carte;
+    public $date_expiration;
     private $db;
 
     public function __construct($db) {
@@ -20,12 +25,15 @@ class CarteMembre {
     }
 
     public function create($data) {
+        if (empty($data['numero_carte']) || empty($data['type_carte']) || empty($data['date_expiration'])) {
+            return false;
+        }
         $sql = "INSERT INTO carte_membre (numero_carte, type_carte, date_expiration) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
-            $data['numero_carte'] ?? null,
-            $data['type_carte'] ?? null,
-            $data['date_expiration'] ?? null
+            $data['numero_carte'],
+            $data['type_carte'],
+            $data['date_expiration']
         ]);
         $id = $this->db->lastInsertId();
         return $this->findById($id);
@@ -51,6 +59,9 @@ class CarteMembre {
         $stmt->execute([$id]);
         return $row;
     }
-}
-    // ...existing code...
+
+    public function read($id) {
+        $row = $this->findById($id);
+        return $row ? true : false;
+    }
 }
