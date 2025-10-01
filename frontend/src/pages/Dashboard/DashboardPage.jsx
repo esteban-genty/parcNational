@@ -2,14 +2,14 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 // Components
-import DashboardRouter from "../components/Dashboard/DashboardRouter";
-import DashboardWeather from "../components/Dashboard/DashboardWeather";
+import DashboardRouter from "../../components/Dashboard/DashboardRouter";
+import DashboardWeather from "../../components/Dashboard/DashboardWeather";
 
 // CSS
-import '../css/dashboard.css'
+import '../../css/dashboard.css'
 
 // IMG
-import bgDashboard from "../assets/bg-dashboard.jpg"
+import bgDashboard from "../../assets/bg-dashboard.jpg"
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);

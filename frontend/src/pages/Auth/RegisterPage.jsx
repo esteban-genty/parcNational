@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import RegisterForm from "../components/RegisterForm";
-import '../css/root.css'
-import '../css/register.css'
+import RegisterForm from "../../components/RegisterForm";
+import '../../css/root.css'
+import '../../css/register.css'
 
 export default function RegisterPage({ setUser }) {
   useEffect(() => {

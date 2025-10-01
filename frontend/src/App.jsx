@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react
 
 // Route Pages
 import Home from "./pages/HomePage";
-import RegisterPage from "./pages/RegisterPage";
-import LoginPage from "./pages/LoginPage";
-import DashboardPage from "./pages/DashboardPage";
+import RegisterPage from "./pages/Auth/RegisterPage";
+import LoginPage from "./pages/Auth/LoginPage";
+import DashboardPage from "./pages/Dashboard/DashboardPage";
 
 // CSS
 import './css/header.css'

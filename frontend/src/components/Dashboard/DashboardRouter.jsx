@@ -7,7 +7,8 @@ function Camping() { return <h2>Réservations camping</h2>; }
 function Ressources() { return <h2>Ressources naturelles</h2>; }
 
 // Page importée
-import Account from "../../pages/AccountPage";
+import Account from "../../pages/Dashboard/ManageAccountPage";
+import Notifications from '../../pages/Dashboard/NotificationsPage'
 
 export default function DashboardRouter({ userRole }) {
   return (
@@ -20,6 +21,7 @@ export default function DashboardRouter({ userRole }) {
         element={
           <ProtectedRoute userRole={userRole}>
             <Account />
+            <Route path="/notifications" element={<Notifications />} />
           </ProtectedRoute>
         }
       />
