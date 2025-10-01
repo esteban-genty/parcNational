@@ -3,6 +3,11 @@
  * Modèle Reservation : représente une réservation dans le parc national
  */
 class Reservation {
+    public $id;
+    public $visiteur_id;
+    public $camping_id;
+    public $date_debut;
+    public $date_fin;
     private $db;
 
     public function __construct($db) {
@@ -24,13 +29,16 @@ class Reservation {
     }
 
     public function create($data) {
+        if (empty($data['visiteur_id']) || empty($data['camping_id']) || empty($data['date_debut']) || empty($data['date_fin'])) {
+            return false;
+        }
         $sql = "INSERT INTO reservation (visiteur_id, camping_id, date_debut, date_fin) VALUES (?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
-            $data['visiteur_id'] ?? null,
-            $data['camping_id'] ?? null,
-            $data['date_debut'] ?? null,
-            $data['date_fin'] ?? null
+            $data['visiteur_id'],
+            $data['camping_id'],
+            $data['date_debut'],
+            $data['date_fin']
         ]);
         $id = $this->db->lastInsertId();
         return $this->findById($id);
@@ -57,4 +65,9 @@ class Reservation {
         $stmt->execute([$id]);
         return $row;
     }
+        // Ajout méthode read pour les tests
+        public function read($id) {
+            $row = $this->findById($id);
+            return $row ? true : false;
+        }
 }
