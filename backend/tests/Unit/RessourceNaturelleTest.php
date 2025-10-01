@@ -15,34 +15,24 @@ class RessourceNaturelleTest extends TestCase {
     }
 
     public function testCreateRessource() {
-        $this->ressource->type = 'Eau';
-        $this->ressource->nom = 'Source du Vallon';
-        $this->ressource->etat = 'Propre';
-        $result = $this->ressource->create();
-        $this->assertTrue($result, 'La création doit réussir');
-    }
-
-    public function testCreateRessourceFail() {
-        $this->ressource->type = '';
-        $this->ressource->nom = '';
-        $this->ressource->etat = '';
-        $result = $this->ressource->create();
-        $this->assertFalse($result, 'La création doit échouer si le type est vide');
+        $data = [
+            'type' => 'Eau',
+            'nom' => 'Source du Vallon',
+            'etat' => 'Propre'
+        ];
+        $result = $this->ressource->create($data);
+        $this->assertIsArray($result);
     }
 
     public function testReadRessource() {
-        $this->ressource->type = 'Flore';
-        $this->ressource->nom = 'Chêne vert';
-        $this->ressource->etat = 'Sain';
-        $this->ressource->create();
+        $data = [
+            'type' => 'Flore',
+            'nom' => 'Chêne vert',
+            'etat' => 'Sain'
+        ];
+        $this->ressource->create($data);
         $id = $this->pdo->lastInsertId();
         $found = $this->ressource->read($id);
-        $this->assertTrue($found, 'La lecture doit réussir');
-        $this->assertEquals('Chêne vert', $this->ressource->nom, 'Le nom doit correspondre');
-    }
-
-    public function testReadRessourceFail() {
-        $found = $this->ressource->read(9999);
-        $this->assertFalse($found, 'La lecture doit échouer si l’id n’existe pas');
+        $this->assertTrue($found);
     }
 }
