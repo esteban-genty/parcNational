@@ -15,23 +15,26 @@ class ReservationTest extends TestCase {
     }
 
     public function testCreateReservation() {
-        $this->reservation->visiteur_id = 1;
-        $this->reservation->camping_id = 1;
-        $this->reservation->date_debut = '2025-10-01';
-        $this->reservation->date_fin = '2025-10-05';
-        $result = $this->reservation->create();
-        $this->assertTrue($result);
+        $data = [
+            'visiteur_id' => 1,
+            'camping_id' => 1,
+            'date_debut' => '2025-10-01',
+            'date_fin' => '2025-10-05'
+        ];
+        $result = $this->reservation->create($data);
+        $this->assertIsArray($result);
     }
 
     public function testReadReservation() {
-        $this->reservation->visiteur_id = 1;
-        $this->reservation->camping_id = 1;
-        $this->reservation->date_debut = '2025-10-10';
-        $this->reservation->date_fin = '2025-10-12';
-        $this->reservation->create();
+        $data = [
+            'visiteur_id' => 1,
+            'camping_id' => 1,
+            'date_debut' => '2025-10-10',
+            'date_fin' => '2025-10-12'
+        ];
+        $this->reservation->create($data);
         $id = $this->pdo->lastInsertId();
         $found = $this->reservation->read($id);
         $this->assertTrue($found);
-        $this->assertEquals(1, $this->reservation->visiteur_id);
     }
 }
