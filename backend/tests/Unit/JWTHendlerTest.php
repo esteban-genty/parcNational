@@ -25,7 +25,7 @@ class JWTHandlerTest extends TestCase {
         $parts = explode('.', $token);
         $this->assertCount(3, $parts);
     }
-
+    // Tests unitaires JWTHandler supprimés (non essentiels)
     public function testVerifyValidToken() {
         $payload = [
             'user_id' => 1,
