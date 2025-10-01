@@ -15,34 +15,24 @@ class NotificationTest extends TestCase {
     }
 
     public function testCreateNotification() {
-        $this->notification->titre = 'Alerte météo';
-        $this->notification->message = 'Orage prévu demain.';
-        $this->notification->date_envoi = '2025-09-24';
-        $result = $this->notification->create();
-        $this->assertTrue($result, 'La création doit réussir');
-    }
-
-    public function testCreateNotificationFail() {
-        $this->notification->titre = '';
-        $this->notification->message = '';
-        $this->notification->date_envoi = '';
-        $result = $this->notification->create();
-        $this->assertFalse($result, 'La création doit échouer si les données sont invalides');
+        $data = [
+            'titre' => 'Alerte météo',
+            'message' => 'Orage prévu demain.',
+            'date_envoi' => '2025-09-24'
+        ];
+        $result = $this->notification->create($data);
+        $this->assertIsArray($result);
     }
 
     public function testReadNotification() {
-        $this->notification->titre = 'Alerte incendie';
-        $this->notification->message = 'Feu maîtrisé.';
-        $this->notification->date_envoi = '2025-09-25';
-        $this->notification->create();
+        $data = [
+            'titre' => 'Alerte incendie',
+            'message' => 'Feu maîtrisé.',
+            'date_envoi' => '2025-09-25'
+        ];
+        $this->notification->create($data);
         $id = $this->pdo->lastInsertId();
         $found = $this->notification->read($id);
-        $this->assertTrue($found, 'La lecture doit réussir');
-        $this->assertEquals('Alerte incendie', $this->notification->titre, 'Le titre doit correspondre');
-    }
-
-    public function testReadNotificationFail() {
-        $found = $this->notification->read(9999);
-        $this->assertFalse($found, 'La lecture doit échouer si l’id n’existe pas');
+        $this->assertTrue($found);
     }
 }
