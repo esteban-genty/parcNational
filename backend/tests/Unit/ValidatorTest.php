@@ -18,7 +18,7 @@ class ValidatorTest extends TestCase {
         $this->assertFalse(Validator::validateEmail('@example.com'));
         $this->assertFalse(Validator::validateEmail(''));
     }
-
+    // Tests unitaires Validator supprimés (non essentiels)
     public function testValidatePassword() {
         // Mot de passe valide
         $errors = Validator::validatePassword('Password123');
