@@ -3,6 +3,10 @@
  * Modèle Camping : représente un camping dans le parc national
  */
 class Camping {
+    public $id;
+    public $nom;
+    public $localisation;
+    public $capacite;
     private $db;
 
     public function __construct($db) {
@@ -24,12 +28,15 @@ class Camping {
     }
 
     public function create($data) {
+        if (empty($data['nom']) || empty($data['localisation']) || empty($data['capacite']) || $data['capacite'] <= 0) {
+            return false;
+        }
         $sql = "INSERT INTO camping (nom, localisation, capacite) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
-            $data['nom'] ?? null,
-            $data['localisation'] ?? null,
-            $data['capacite'] ?? null
+            $data['nom'],
+            $data['localisation'],
+            $data['capacite']
         ]);
         $id = $this->db->lastInsertId();
         return $this->findById($id);
@@ -55,4 +62,9 @@ class Camping {
         $stmt->execute([$id]);
         return $row;
     }
+        // Ajout méthode read pour les tests
+        public function read($id) {
+            $row = $this->findById($id);
+            return $row ? true : false;
+        }
 }
