@@ -108,7 +108,6 @@ class Database {
     private $conn;
 
     public function __construct() {
-        // ... code to initialize $this->conn ...
     }
 
     public function getConnection() {
