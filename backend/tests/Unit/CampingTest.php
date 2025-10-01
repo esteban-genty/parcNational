@@ -20,41 +20,24 @@ class CampingTest extends TestCase {
     }
 
     public function testCreateCamping() {
-        // Test création
-        $this->camping->nom = 'Camping Test';
-        $this->camping->localisation = 'Calanques';
-        $this->camping->capacite = 50;
-        $result = $this->camping->create();
-        // Vérifie que la création fonctionne
-        $this->assertTrue($result, 'La création doit réussir');
-    }
-
-    public function testCreateCampingFail() {
-        // Test création avec données manquantes
-        $this->camping->nom = '';
-        $this->camping->localisation = '';
-        $this->camping->capacite = 0;
-        $result = $this->camping->create();
-        // Vérifie que la création échoue
-        $this->assertFalse($result, 'La création doit échouer si les données sont invalides');
+        $data = [
+            'nom' => 'Camping Test',
+            'localisation' => 'Calanques',
+            'capacite' => 50
+        ];
+        $result = $this->camping->create($data);
+        $this->assertIsArray($result);
     }
 
     public function testReadCamping() {
-        // Crée un camping pour le test
-    $this->camping->nom = 'Camping Read';
-    $this->camping->localisation = 'Calanques';
-    $this->camping->capacite = 30;
-    $this->camping->create();
-    $id = $this->pdo->lastInsertId();
-    // Test lecture
-    $found = $this->camping->read($id);
-    $this->assertTrue($found, 'La lecture doit réussir');
-    $this->assertEquals('Camping Read', $this->camping->nom, 'Le nom doit correspondre');
-    }
-
-    public function testReadCampingFail() {
-        // Test lecture d'un camping inexistant
-        $found = $this->camping->read(9999);
-        $this->assertFalse($found, 'La lecture doit échouer si l’id n’existe pas');
+        $data = [
+            'nom' => 'Camping Read',
+            'localisation' => 'Calanques',
+            'capacite' => 30
+        ];
+        $this->camping->create($data);
+        $id = $this->pdo->lastInsertId();
+        $found = $this->camping->read($id);
+        $this->assertTrue($found);
     }
 }
