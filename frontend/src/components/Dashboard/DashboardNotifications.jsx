@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import '../../css/notifications.css';
 
 /**
  * 🔔 Composant d'affichage des notifications utilisateur
