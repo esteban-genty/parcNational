@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import LoginForm from "../components/LoginForm";
+import WizardLogin from "../components/WizardLogin";
 import '../css/root.css'
 import '../css/login.css'
 
@@ -15,7 +15,7 @@ export default function LoginPage({ setUser }) {
 
   return (
     <section className="login-section">
-      <LoginForm setUser={setUser} /> 
+      <WizardLogin setUser={setUser} />
     </section>
   );
 }

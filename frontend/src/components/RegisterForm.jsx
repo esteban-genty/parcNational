@@ -1,14 +1,12 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import bgCalanque from "../assets/bg-calanque.jpg";
+import '../css/wizard-register.css';
 
 export default function RegisterForm({ setUser }) {
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
   const [motDePasse, setMotDePasse] = useState("");
   const [message, setMessage] = useState("");
-  const navigate = useNavigate(); 
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -30,7 +28,7 @@ export default function RegisterForm({ setUser }) {
         setEmail(""); 
         setMotDePasse("");
         setUser(data.user);
-        navigate("/dashboard");
+  window.location.href = "/dashboard";
       } else {
         setMessage(data.error || "Erreur lors de l'inscription");
       }
@@ -61,7 +59,7 @@ export default function RegisterForm({ setUser }) {
             <label>Mot de passe</label>
             <input type="password" value={motDePasse} onChange={(e) => setMotDePasse(e.target.value)} required />
           </div>
-          <button type="submit">S’inscrire</button>
+          <button type="submit">S'inscrire</button>
           {message && <p id="erreur">{message}</p>}
         </form>
         <p id="connection">

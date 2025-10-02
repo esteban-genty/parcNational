@@ -1,0 +1,109 @@
+### CRUD concret : Camping des Calanques
+POST http://localhost/parcNational/backend/api/camping.php
+Content-Type: application/json
+
+{
+  "nom": "Camping des Calanques",
+  "localisation": "Calanque de Sormiou",
+  "capacite": 50
+}
+
+### Vérification de la liste des campings (GET)
+GET http://localhost/parcNational/backend/api/camping.php
+
+### Lecture d'un camping précis (GET)
+GET http://localhost/parcNational/backend/api/camping.php?id=1
+
+### Modification du camping (PUT)
+PUT http://localhost/parcNational/backend/api/camping.php
+Content-Type: application/json
+
+{
+  "id": 1,
+  "nom": "Camping des Calanques - Modifié",
+  "localisation": "Calanque de Morgiou",
+  "capacite": 60
+}
+
+### Suppression du camping (DELETE)
+DELETE http://localhost/parcNational/backend/api/camping.php?id=1
+
+### Test API Camping CRUD
+POST http://localhost/parcNational/backend/api/camping.php
+Content-Type: application/json
+
+{
+  "nom": "Test Camping",
+  "localisation": "Calanque de Sugiton",
+  "capacite": 10
+}
+###
+GET http://localhost/parcNational/backend/api/camping.php
+###
+GET http://localhost/parcNational/backend/api/camping.php?id=1
+###
+PUT http://localhost/parcNational/backend/api/camping.php
+Content-Type: application/json
+
+{
+  "id": 1,
+  "nom": "Camping modifié",
+  "localisation": "Calanque d'En-Vau",
+  "capacite": 20
+}
+###
+DELETE http://localhost/parcNational/backend/api/camping.php?id=1
+
+### Test API Sentier CRUD
+POST http://localhost/parcNational/backend/api/sentier.php
+Content-Type: application/json
+
+{
+  "nom": "Sentier du Cap Gros",
+  "difficulte": "moyen",
+  "description": "Beau sentier avec vue sur la mer."
+}
+###
+GET http://localhost/parcNational/backend/api/sentier.php
+###
+GET http://localhost/parcNational/backend/api/sentier.php?id=1
+###
+PUT http://localhost/parcNational/backend/api/sentier.php
+Content-Type: application/json
+
+{
+  "id": 1,
+  "nom": "Sentier modifié",
+  "difficulte": "difficile",
+  "description": "Sentier sportif."
+}
+###
+DELETE http://localhost/parcNational/backend/api/sentier.php?id=1
+
+### Test API Reservation CRUD
+POST http://localhost/parcNational/backend/api/reservation.php
+Content-Type: application/json
+
+{
+  "visiteur_id": 1,
+  "camping_id": 1,
+  "date_debut": "2025-10-01",
+  "date_fin": "2025-10-05"
+}
+###
+GET http://localhost/parcNational/backend/api/reservation.php
+###
+GET http://localhost/parcNational/backend/api/reservation.php?id=1
+###
+PUT http://localhost/parcNational/backend/api/reservation.php
+Content-Type: application/json
+
+{
+  "id": 1,
+  "visiteur_id": 1,
+  "camping_id": 1,
+  "date_debut": "2025-10-02",
+  "date_fin": "2025-10-06"
+}
+###
+DELETE http://localhost/parcNational/backend/api/reservation.php?id=1
