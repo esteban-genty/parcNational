@@ -87,6 +87,12 @@
   flex: 1;
 }
 
+.notification-title {
+  margin: 0 0 5px 0;
+  color: #1976d2;
+  font-size: 1rem;
+}
+
 .notification-message {
   margin: 0 0 5px 0;
   color: #333;

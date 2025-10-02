@@ -30,16 +30,44 @@ export default function DashboardNotifications({ userId }) {
         }
       );
 
+      // 🔍 Vérifier d'abord si la réponse est OK
       if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des notifications');
+        throw new Error(`Erreur HTTP: ${response.status}`);
       }
 
-      const data = await response.json();
+      // 📝 Récupérer le texte brut pour debug
+      const textData = await response.text();
       
-      // Vérifier si data est un tableau
+      // 🛡️ Vérifier que la réponse n'est pas vide
+      if (!textData || textData.trim() === '') {
+        console.warn('Réponse vide de l\'API');
+        setNotifications([]);
+        setError(null);
+        return;
+      }
+
+      // 🔄 Parser le JSON
+      let data;
+      try {
+        data = JSON.parse(textData);
+      } catch (parseError) {
+        console.error('Erreur de parsing JSON:', parseError);
+        console.error('Réponse reçue:', textData);
+        throw new Error('Format de réponse invalide (pas du JSON)');
+      }
+
+      // ✅ Vérifier si c'est une erreur du backend
+      if (data.error) {
+        throw new Error(data.message || 'Erreur serveur');
+      }
+      
+      // 📦 Vérifier si data est un tableau
       if (Array.isArray(data)) {
         setNotifications(data);
+      } else if (data.data && Array.isArray(data.data)) {
+        setNotifications(data.data);
       } else {
+        console.warn('Format de données inattendu:', data);
         setNotifications([]);
       }
       
@@ -88,21 +116,19 @@ export default function DashboardNotifications({ userId }) {
         {notifications.map((notif) => (
           <div 
             key={notif.id} 
-            className={`notification-item ${notif.lu ? 'read' : 'unread'}`}
+            className="notification-item unread"
           >
             <div className="notification-content">
+              <p className="notification-title"><strong>{notif.titre}</strong></p>
               <p className="notification-message">{notif.message}</p>
               <span className="notification-date">
-                {new Date(notif.created_at).toLocaleDateString('fr-FR', {
+                {new Date(notif.date_envoi).toLocaleDateString('fr-FR', {
                   day: '2-digit',
-                  month: 'short',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
+                  month: 'long',
+                  year: 'numeric'
                 })}
               </span>
             </div>
-            {!notif.lu && <span className="notification-badge">●</span>}
           </div>
         ))}
       </div>

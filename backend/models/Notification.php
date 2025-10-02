@@ -29,13 +29,17 @@ class Notification {
 
     /**
      * 👤 Récupère toutes les notifications d'un utilisateur spécifique
-     * @param int $utilisateur_id - ID de l'utilisateur
+     * NOTE: La table actuelle n'a pas de colonne utilisateur_id
+     * Cette méthode retourne toutes les notifications pour le moment
+     * @param int $utilisateur_id - ID de l'utilisateur (non utilisé pour l'instant)
      * @return array - Liste des notifications
      */
     public function findByUserId($utilisateur_id) {
-        $sql = "SELECT * FROM notification WHERE utilisateur_id = ? ORDER BY date_envoi DESC";
+        // 📝 TODO: Ajouter une colonne utilisateur_id à la table notification
+        // Pour l'instant, on retourne toutes les notifications
+        $sql = "SELECT * FROM notification ORDER BY date_envoi DESC LIMIT 10";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute([$utilisateur_id]);
+        $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
