@@ -27,6 +27,18 @@ class Notification {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * 👤 Récupère toutes les notifications d'un utilisateur spécifique
+     * @param int $utilisateur_id - ID de l'utilisateur
+     * @return array - Liste des notifications
+     */
+    public function findByUserId($utilisateur_id) {
+        $sql = "SELECT * FROM notification WHERE utilisateur_id = ? ORDER BY date_envoi DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$utilisateur_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function create($data) {
         if (empty($data['titre']) || empty($data['message']) || empty($data['date_envoi'])) {
             return false;

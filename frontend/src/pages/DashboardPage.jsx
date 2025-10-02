@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 // Components
 import DashboardRouter from "../components/Dashboard/DashboardRouter";
 import DashboardWeather from "../components/Dashboard/DashboardWeather";
+import DashboardNotifications from "../components/Dashboard/DashboardNotifications";
 
 // CSS
 import '../css/dashboard.css'
@@ -77,7 +78,7 @@ export default function Dashboard() {
         </section>
 
         <section className="dashboard-notifications">
-          <p>Notification...</p>
+          <DashboardNotifications userId={user?.id} />
         </section>
 
         <section className="dashboard-weather">

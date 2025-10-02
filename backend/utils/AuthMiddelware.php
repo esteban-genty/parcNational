@@ -5,18 +5,36 @@ require_once __DIR__ . '/../models/Database.php';
 
 /**
  * Middleware d'authentification pour protéger les routes
+ * Supporte à la fois JWT (Bearer token) et Sessions PHP
  */
 class AuthMiddleware {
     
     /**
-     * Vérifie l'authentification de l'utilisateur
-     * @return array|false
+     * Vérifie l'authentification de l'utilisateur via JWT ou Session
+     * @return array|false - Retourne les données utilisateur ou false
      */
     public static function authenticate() {
+        // 1️⃣ D'abord, vérifier si une session est active (priorité aux sessions)
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        
+        // Si l'utilisateur est connecté via session
+        if (isset($_SESSION['user_id']) && isset($_SESSION['role'])) {
+            return [
+                'user_id' => $_SESSION['user_id'],
+                'email' => $_SESSION['email'] ?? '',
+                'role' => $_SESSION['role'],
+                'nom' => $_SESSION['nom'] ?? '',
+                'auth_method' => 'session' // Indique que c'est une session
+            ];
+        }
+        
+        // 2️⃣ Si pas de session, vérifier le token JWT
         $token = JWTHandler::getBearerToken();
         
         if (!$token) {
-            self::sendUnauthorizedResponse("Token manquant");
+            self::sendUnauthorizedResponse("Token manquant ou session expirée");
             return false;
         }
 
@@ -27,6 +45,8 @@ class AuthMiddleware {
             return false;
         }
 
+        // Ajouter une indication que c'est un JWT
+        $payload['auth_method'] = 'jwt';
         return $payload;
     }
 

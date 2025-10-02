@@ -14,5 +14,7 @@
             "database": "parc_national",
             "username": "oussama"
         }
-    ]
+    ],
+    "editor.hideCursorInOverviewRuler": true,
+    "editor.suggest.showStatusBar": true
 }

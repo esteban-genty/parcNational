@@ -1,4 +1,17 @@
 <?php
+// 🌐 Configuration CORS pour permettre les requêtes depuis le frontend
+header('Access-Control-Allow-Origin: http://localhost:5173');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+header('Access-Control-Allow-Credentials: true');
+header('Content-Type: application/json');
+
+// Gestion de la requête OPTIONS (preflight)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../models/Database.php';
 require_once __DIR__ . '/../../models/User.php';
@@ -6,12 +19,13 @@ require_once __DIR__ . '/../../utils/AuthMiddleware.php';
 require_once __DIR__ . '/../../utils/ResponseHelper.php';
 
 /**
- * API de gestion des utilisateurs (Admin seulement)
+ * 👥 API de gestion des utilisateurs (Admin seulement)
  * GET /api/admin/users - Liste tous les utilisateurs
  * DELETE /api/admin/users/{id} - Supprime un utilisateur
  */
 
 try {
+    // 🔐 Vérification que l'utilisateur est admin (via session ou JWT)
     $payload = AuthMiddleware::requireAdmin();
     
     if (!$payload) {
