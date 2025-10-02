@@ -29,9 +29,9 @@ class UserTest extends TestCase {
 
         $result = $this->user->create();
 
-        $this->assertTrue($result);
-        $this->assertNotNull($this->user->id);
-        $this->assertIsNumeric($this->user->id);
+        $this->assertTrue($result['success']);
+        $this->assertNotNull($result['id']);
+        $this->assertIsNumeric($result['id']);
     }
     // Tests unitaires User supprimés (non essentiels)
     public function testEmailExists() {

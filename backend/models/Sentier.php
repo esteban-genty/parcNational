@@ -17,11 +17,15 @@ class Sentier {
     // CRUD : Create
     public function create() {
         if (empty($this->nom) || empty($this->difficulte)) {
-            return false;
+            return ['success' => false, 'message' => 'Nom et difficulté requis'];
         }
         $sql = "INSERT INTO sentier (nom, difficulte, description) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$this->nom, $this->difficulte, $this->description]);
+        if ($stmt->execute([$this->nom, $this->difficulte, $this->description])) {
+            $this->id = $this->db->lastInsertId();
+            return ['success' => true, 'id' => $this->id];
+        }
+        return ['success' => false, 'message' => 'Erreur lors de la création'];
     }
 
     // CRUD : Read (un sentier)

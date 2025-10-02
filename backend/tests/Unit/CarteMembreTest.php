@@ -1,7 +1,5 @@
 <?php
 use PHPUnit\Framework\TestCase;
-require_once __DIR__ . '/../../models/CarteMembre.php';
-require_once __DIR__ . '/../../config/database.php';
 
 class CarteMembreTest extends TestCase {
     private $pdo;
@@ -30,8 +28,8 @@ class CarteMembreTest extends TestCase {
             'type_carte' => 'vip',
             'date_expiration' => '2027-01-01'
         ];
-        $this->carte->create($data);
-        $id = $this->pdo->lastInsertId();
+        $result = $this->carte->create($data);
+        $id = $result['id'];
         $found = $this->carte->read($id);
         $this->assertTrue($found);
     }

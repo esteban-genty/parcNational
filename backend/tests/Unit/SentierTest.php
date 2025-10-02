@@ -1,7 +1,5 @@
 <?php
 use PHPUnit\Framework\TestCase;
-require_once __DIR__ . '/../../models/Sentier.php';
-require_once __DIR__ . '/../../config/database.php';
 
 class SentierTest extends TestCase {
     private $pdo;
@@ -19,15 +17,17 @@ class SentierTest extends TestCase {
         $this->sentier->difficulte = 'facile';
         $this->sentier->description = 'Balade autour du lac.';
         $result = $this->sentier->create();
-        $this->assertTrue($result);
+        $this->assertTrue($result['success']);
+        $this->assertNotEmpty($result['id']);
     }
     // Tests unitaires Sentier supprimés (non essentiels)
     public function testReadSentier() {
         $this->sentier->nom = 'Sentier du Pic';
         $this->sentier->difficulte = 'difficile';
         $this->sentier->description = 'Montée raide.';
-        $this->sentier->create();
-        $id = $this->pdo->lastInsertId();
+        $result = $this->sentier->create();
+        $this->assertTrue($result['success']);
+        $id = $result['id'];
         $found = $this->sentier->read($id);
         $this->assertTrue($found);
         $this->assertEquals('Sentier du Pic', $this->sentier->nom);

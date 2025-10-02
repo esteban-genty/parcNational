@@ -1,7 +1,5 @@
 <?php
 use PHPUnit\Framework\TestCase;
-require_once __DIR__ . '/../../models/Notification.php';
-require_once __DIR__ . '/../../config/database.php';
 
 class NotificationTest extends TestCase {
     private $pdo;
@@ -30,8 +28,8 @@ class NotificationTest extends TestCase {
             'message' => 'Feu maîtrisé.',
             'date_envoi' => '2025-09-25'
         ];
-        $this->notification->create($data);
-        $id = $this->pdo->lastInsertId();
+        $result = $this->notification->create($data);
+        $id = $result['id'];
         $found = $this->notification->read($id);
         $this->assertTrue($found);
     }

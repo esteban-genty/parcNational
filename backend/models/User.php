@@ -23,7 +23,7 @@ class User {
 
     /**
      * Crée un nouvel utilisateur
-     * @return bool
+     * @return array
      */
     public function create() {
         $query = "INSERT INTO " . $this->table_name . " 
@@ -47,10 +47,10 @@ class User {
 
         if($stmt->execute()) {
             $this->id = $this->conn->lastInsertId();
-            return true;
+            return ['success' => true, 'id' => $this->id];
         }
 
-        return false;
+        return ['success' => false, 'message' => 'Erreur lors de la création de l\'utilisateur'];
     }
 
     /**

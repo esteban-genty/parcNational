@@ -1,7 +1,5 @@
 <?php
 use PHPUnit\Framework\TestCase;
-require_once __DIR__ . '/../../models/RessourceNaturelle.php';
-require_once __DIR__ . '/../../config/database.php';
 
 class RessourceNaturelleTest extends TestCase {
     private $pdo;
@@ -30,8 +28,8 @@ class RessourceNaturelleTest extends TestCase {
             'nom' => 'Chêne vert',
             'etat' => 'Sain'
         ];
-        $this->ressource->create($data);
-        $id = $this->pdo->lastInsertId();
+        $result = $this->ressource->create($data);
+        $id = $result['id'];
         $found = $this->ressource->read($id);
         $this->assertTrue($found);
     }

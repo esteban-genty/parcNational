@@ -1,7 +1,5 @@
 <?php
 use PHPUnit\Framework\TestCase;
-require_once __DIR__ . '/../../models/Reservation.php';
-require_once __DIR__ . '/../../config/database.php';
 
 class ReservationTest extends TestCase {
     private $pdo;
@@ -32,8 +30,8 @@ class ReservationTest extends TestCase {
             'date_debut' => '2025-10-10',
             'date_fin' => '2025-10-12'
         ];
-        $this->reservation->create($data);
-        $id = $this->pdo->lastInsertId();
+        $result = $this->reservation->create($data);
+        $id = $result['id'];
         $found = $this->reservation->read($id);
         $this->assertTrue($found);
     }
