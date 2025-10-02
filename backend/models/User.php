@@ -99,7 +99,7 @@ class User {
      * @return bool
      */
     public function readOne($id) {
-        $query = "SELECT id, nom, email, role, created_at, updated_at 
+        $query = "SELECT id, nom, email, role 
                   FROM " . $this->table_name . " 
                   WHERE id = :id LIMIT 1";
 
@@ -113,8 +113,6 @@ class User {
             $this->nom = $row['nom'];
             $this->email = $row['email'];
             $this->role = $row['role'];
-            $this->created_at = $row['created_at'];
-            $this->updated_at = $row['updated_at'];
             return true;
         }
 
@@ -127,7 +125,7 @@ class User {
      */
     public function update() {
         $query = "UPDATE " . $this->table_name . " 
-                  SET nom=:nom, email=:email, role=:role, updated_at=CURRENT_TIMESTAMP 
+                  SET nom=:nom, email=:email, role=:role 
                   WHERE id=:id";
 
         $stmt = $this->conn->prepare($query);

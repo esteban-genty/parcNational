@@ -1,5 +1,6 @@
 <?php
 require_once "Database.php";
+use PDO;
 
 class AuthModel extends Database {
     private PDO $db;
@@ -51,20 +52,17 @@ class AuthModel extends Database {
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             return $user ?: false;
-
         } catch (PDOException $e) {
+            // Log or handle error as needed
             return false;
         }
     }
 
-
     public function login(string $email, string $mot_de_passe): array|false {
-        
         $sql = "SELECT * FROM utilisateur WHERE email = :email";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([":email" => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
         if ($user && password_verify($mot_de_passe, $user['mot_de_passe'])) {
             return $user;
         }

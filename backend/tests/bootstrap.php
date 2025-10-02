@@ -3,7 +3,10 @@
  * Bootstrap pour les tests PHPUnit
  */
 
-// Autoloader simple pour les tests
+// Charger l'autoloader de Composer en premier (OBLIGATOIRE pour PHPUnit)
+require_once __DIR__ . '/../vendor/autoload.php';
+
+// Autoloader simple pour les tests (pour les classes non gérées par Composer)
 spl_autoload_register(function ($class) {
     $directories = [
         __DIR__ . '/../models/',

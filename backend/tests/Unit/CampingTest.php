@@ -1,7 +1,5 @@
 <?php
 use PHPUnit\Framework\TestCase;
-require_once __DIR__ . '/../../models/Camping.php';
-require_once __DIR__ . '/../../config/database.php';
 
 /**
  * Test unitaire pour le modèle Camping
@@ -35,8 +33,8 @@ class CampingTest extends TestCase {
             'localisation' => 'Calanques',
             'capacite' => 30
         ];
-        $this->camping->create($data);
-        $id = $this->pdo->lastInsertId();
+        $result = $this->camping->create($data);
+        $id = $result['id']; // Le create retourne l'objet complet avec l'id
         $found = $this->camping->read($id);
         $this->assertTrue($found);
     }

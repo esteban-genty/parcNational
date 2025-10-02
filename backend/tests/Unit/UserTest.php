@@ -1,4 +1,5 @@
 <?php
+
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -9,14 +10,15 @@ class UserTest extends TestCase {
     private $user;
 
     protected function setUp(): void {
-        DatabaseTestHelper::setupDatabase();
-        $this->db = DatabaseTestHelper::getTestConnection();
+        $database = new Database();
+        $this->db = $database->connect();
         $this->user = new User($this->db);
-        DatabaseTestHelper::cleanDatabase();
+        // Nettoyage manuel de la table utilisateur
+        $this->db->exec('DELETE FROM utilisateur');
     }
 
     protected function tearDown(): void {
-        DatabaseTestHelper::cleanDatabase();
+        $this->db->exec('DELETE FROM utilisateur');
     }
 
     public function testCreateUser() {
@@ -34,7 +36,11 @@ class UserTest extends TestCase {
     // Tests unitaires User supprimés (non essentiels)
     public function testEmailExists() {
         // Créer un utilisateur
-        DatabaseTestHelper::createTestUser(['email' => 'existing@example.com']);
+        $this->user->nom = "Test";
+        $this->user->email = "existing@example.com";
+        $this->user->mot_de_passe = "password";
+        $this->user->role = "visiteur";
+        $this->user->create();
 
         // Tester avec un email existant
         $exists = $this->user->emailExists('existing@example.com');
@@ -48,14 +54,14 @@ class UserTest extends TestCase {
 
     public function testLogin() {
         // Créer un utilisateur avec un mot de passe connu
-        $password = 'testpassword123';
-        DatabaseTestHelper::createTestUser([
-            'email' => 'login@example.com',
-            'mot_de_passe' => password_hash($password, PASSWORD_BCRYPT)
-        ]);
+        $this->user->nom = "Login Test";
+        $this->user->email = "login@example.com";
+        $this->user->mot_de_passe = "testpassword123";
+        $this->user->role = "visiteur";
+        $this->user->create();
 
         // Test de connexion réussie
-        $loginSuccess = $this->user->login('login@example.com', $password);
+        $loginSuccess = $this->user->login('login@example.com', 'testpassword123');
         $this->assertTrue($loginSuccess);
 
         // Test de connexion échouée (mauvais mot de passe)
@@ -63,15 +69,17 @@ class UserTest extends TestCase {
         $this->assertFalse($loginFail);
 
         // Test de connexion échouée (email inexistant)
-        $loginFailEmail = $this->user->login('nonexistent@example.com', $password);
+        $loginFailEmail = $this->user->login('nonexistent@example.com', 'testpassword123');
         $this->assertFalse($loginFailEmail);
     }
 
     public function testReadOne() {
-        $userId = DatabaseTestHelper::createTestUser([
-            'nom' => 'Test ReadOne',
-            'email' => 'readone@example.com'
-        ]);
+        $this->user->nom = "Test ReadOne";
+        $this->user->email = "readone@example.com";
+        $this->user->mot_de_passe = "password";
+        $this->user->role = "visiteur";
+        $this->user->create();
+        $userId = $this->user->id;
 
         $result = $this->user->readOne($userId);
 
@@ -82,8 +90,13 @@ class UserTest extends TestCase {
     }
 
     public function testUpdate() {
-        $userId = DatabaseTestHelper::createTestUser();
-        
+        $this->user->nom = "Update Test";
+        $this->user->email = "update@example.com";
+        $this->user->mot_de_passe = "password";
+        $this->user->role = "visiteur";
+        $this->user->create();
+        $userId = $this->user->id;
+
         $this->user->readOne($userId);
         $this->user->nom = "Nom Modifié";
         $this->user->email = "modified@example.com";
@@ -100,8 +113,13 @@ class UserTest extends TestCase {
     }
 
     public function testDelete() {
-        $userId = DatabaseTestHelper::createTestUser();
-        
+        $this->user->nom = "Delete Test";
+        $this->user->email = "delete@example.com";
+        $this->user->mot_de_passe = "password";
+        $this->user->role = "visiteur";
+        $this->user->create();
+        $userId = $this->user->id;
+
         $this->user->id = $userId;
         $result = $this->user->delete();
 

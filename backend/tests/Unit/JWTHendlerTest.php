@@ -1,4 +1,3 @@
--- Active: 1737899013229@@127.0.0.1@3306@parc_national
 <?php
 require_once __DIR__ . '/../Helper/DatabaseTestHelper.php';
 
@@ -25,6 +24,7 @@ class JWTHandlerTest extends TestCase {
         $parts = explode('.', $token);
         $this->assertCount(3, $parts);
     }
+     
     // Tests unitaires JWTHandler supprimés (non essentiels)
     public function testVerifyValidToken() {
         $payload = [
