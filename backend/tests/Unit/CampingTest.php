@@ -18,24 +18,18 @@ class CampingTest extends TestCase {
     }
 
     public function testCreateCamping() {
-        $data = [
-            'nom' => 'Camping Test',
-            'localisation' => 'Calanques',
-            'capacite' => 50
-        ];
-        $result = $this->camping->create($data);
+        $result = $this->camping->create('Camping Test', 'Calanques', 50);
         $this->assertIsArray($result);
+        $this->assertEquals('Camping Test', $result['nom']);
+        $this->assertEquals('Calanques', $result['localisation']);
+        $this->assertEquals(50, $result['capacite']);
     }
 
     public function testReadCamping() {
-        $data = [
-            'nom' => 'Camping Read',
-            'localisation' => 'Calanques',
-            'capacite' => 30
-        ];
-        $result = $this->camping->create($data);
-        $id = $result['id']; // Le create retourne l'objet complet avec l'id
-        $found = $this->camping->read($id);
-        $this->assertTrue($found);
+        $result = $this->camping->create('Camping Read', 'Calanques', 30);
+        $id = $result['id'];
+        $found = $this->camping->findById($id);
+        $this->assertIsArray($found);
+        $this->assertEquals('Camping Read', $found['nom']);
     }
 }

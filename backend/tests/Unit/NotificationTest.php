@@ -23,14 +23,14 @@ class NotificationTest extends TestCase {
     }
 
     public function testReadNotification() {
-        $data = [
-            'titre' => 'Alerte incendie',
-            'message' => 'Feu maîtrisé.',
-            'date_envoi' => '2025-09-25'
-        ];
-        $result = $this->notification->create($data);
+        $result = $this->notification->createSystemNotification(
+            'sentier_danger',
+            '1',
+            'Test notification message'
+        );
         $id = $result['id'];
-        $found = $this->notification->read($id);
-        $this->assertTrue($found);
+        $found = $this->notification->findById($id);
+        $this->assertIsArray($found);
+        $this->assertEquals($id, $found['id']);
     }
 }
