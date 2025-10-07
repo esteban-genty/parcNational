@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import icons from '../../utils/icons';
 
 /**
- * 🌤️ Widget Météo pour les Calanques de Marseille
+ * Widget Météo pour les Calanques de Marseille
  * Utilise l'API Open-Meteo (gratuite, pas de clé API nécessaire)
  */
 export default function MeteoWidget() {
@@ -144,7 +146,7 @@ export default function MeteoWidget() {
       {/* Prévisions 3 jours */}
       <div style={{ fontSize: '0.85rem' }}>
         <div style={{ fontWeight: 'bold', marginBottom: '0.5rem', opacity: 0.9 }}>
-          📅 Prévisions 3 jours
+          <FontAwesomeIcon icon={icons.calendar} /> Prévisions 3 jours
         </div>
         <div style={{ display: 'grid', gap: '0.5rem' }}>
           {daily.time.slice(0, 3).map((date, index) => (
