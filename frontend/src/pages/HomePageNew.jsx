@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import icons from '../utils/icons';
 import bgHome from '../assets/bg-home.jpeg';
 import '../css/animations.css';
 
@@ -73,7 +75,7 @@ export default function HomePage() {
           animation: 'scaleIn 1.2s ease-out'
         }}>
           <h1 style={{ fontSize: '4rem', fontWeight: '900', marginBottom: '1rem' }}>
-            🏞️ Parc National des Calanques
+            <FontAwesomeIcon icon={icons.mountain} /> Parc National des Calanques
           </h1>
           <p style={{ fontSize: '1.5rem', fontWeight: '300' }}>
             Un écrin naturel entre mer et falaises
@@ -146,7 +148,7 @@ export default function HomePage() {
             marginBottom: '3rem',
             fontWeight: '800'
           }}>
-            🌿 Ressources Terrestres
+            <FontAwesomeIcon icon={icons.leaf} /> Ressources Terrestres
           </h3>
           
           <div className="grid grid-3">
