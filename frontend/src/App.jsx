@@ -1,39 +1,43 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, Navigate } from "react-router-dom";
 
-// Route Pages
-import Home from "./pages/HomePage";
+// Components
+import AnimatedHeader from "./components/AnimatedHeader";
+
+// Pages
+import Home from "./pages/HomePageNew";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 
-// CSS
-import './css/header.css'
-
-// Icons
-import ProfileIcon from "./assets/icons/user.png"
+// CSS Global
+import './css/animations.css';
 
 function App() {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Vérifier la session à l'ouverture de l'application
+    // Vérification session au chargement
     const checkSession = async () => {
       try {
         const response = await fetch(
-          "http://localhost/parcNational/backend/controllers/AuthController.php?action=check",
+          "http://localhost:8080/controllers/AuthController.php?action=check",
           {
             method: "GET",
             credentials: "include",
           }
         );
         const data = await response.json();
+        console.log("Session check:", data);
         if (data.loggedIn) {
           setUser(data.user);
         }
       } catch (error) {
         console.error("Erreur session :", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -41,54 +45,35 @@ function App() {
   }, []);
 
   const handleLogout = async () => {
-    const res = await fetch(
-      "http://localhost/parcNational/backend/controllers/AuthController.php?action=logout",
-      {
-        method: "POST",
-        credentials: "include",
-      }
-    );
-    const data = await res.json();
-
-    if (data.success) {
+    try {
+      await fetch(
+        "http://localhost:8080/controllers/AuthController.php?action=logout",
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
       setUser(null);
       navigate("/");
+    } catch (error) {
+      console.error("Erreur logout:", error);
     }
   };
 
+  if (loading) {
+    return <div style={{ padding: '50px', textAlign: 'center' }}>Chargement...</div>;
+  }
+
   return (
     <>
-    <header className="app-header">
-      <nav className="app-nav">
-        <div className="nav-left">
-          <Link to="/">Accueil</Link>
-          {user && <Link to="/sentiers">Sentiers</Link>}
-          {user && <Link to="/camping">Campings</Link>}
-        </div>
-
-        <div className="nav-right">
-          <Link to={user ? "/dashboard" : "/register"}>
-            <img src={ProfileIcon} alt="Profil" className="profile-icon" />
-          </Link>
-
-          {user && <button onClick={handleLogout}>Déconnexion</button>}
-        </div>
-      </nav>
-    </header>
-
-
-      <main className="app-main">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<RegisterPage setUser={setUser} />} />
-          <Route path="/login" element={<LoginPage setUser={setUser} />} />
-          <Route path="/dashboard" element={<DashboardPage user={user} />} />
-        </Routes>
-      </main>
-
-      <footer className="app-footer">
-        <p>Footer</p>
-      </footer>
+      <AnimatedHeader user={user} onLogout={handleLogout} />
+      
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/register" element={<RegisterPage setUser={setUser} />} />
+        <Route path="/login" element={user ? <Navigate to="/dashboard" replace /> : <LoginPage setUser={setUser} />} />
+        <Route path="/dashboard/*" element={user ? <DashboardPage user={user} /> : <Navigate to="/login" replace />} />
+      </Routes>
     </>
   );
 }
@@ -100,3 +85,4 @@ export default function AppWrapper() {
     </Router>
   );
 }
+
