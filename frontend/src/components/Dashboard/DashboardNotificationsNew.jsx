@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import icons from '../../utils/icons';
 import { useNotifications } from '../../hooks/useAPI';
 import '../../css/animations.css';
 
@@ -74,14 +76,16 @@ export default function DashboardNotifications({ isAdmin = false }) {
         alignItems: 'center',
         marginBottom: '1.5rem'
       }}>
-        <h3 className="text-gradient">🔔 Notifications Actives</h3>
+        <h3 className="text-gradient">
+          <FontAwesomeIcon icon={icons.bell} /> Notifications Actives
+        </h3>
         {isAdmin && (
           <button 
             onClick={handleGenerate} 
             className="btn btn-primary"
             style={{ fontSize: '0.9rem', padding: '0.5rem 1rem' }}
           >
-            🔄 Générer
+            <FontAwesomeIcon icon={icons.plus} /> Générer
           </button>
         )}
       </div>
@@ -127,7 +131,7 @@ export default function DashboardNotifications({ isAdmin = false }) {
                     fontSize: '0.85rem',
                     opacity: 0.7
                   }}>
-                    📅 {new Date(notif.date_envoi).toLocaleDateString('fr-FR', {
+                    <FontAwesomeIcon icon={icons.calendar} /> {new Date(notif.date_envoi).toLocaleDateString('fr-FR', {
                       day: 'numeric',
                       month: 'long',
                       year: 'numeric'
