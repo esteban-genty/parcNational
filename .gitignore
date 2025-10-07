@@ -34,6 +34,7 @@ yarn-error.log*
 *.tmp
 *.temp
 *.session.sql
+oussama.session.sql
 
 # Documentation obsolète (archivée)
 CORRECTIONS-FINALES.md
@@ -47,6 +48,10 @@ NETTOYAGE-COMPLET.md
 RAPPORT-NETTOYAGE.md
 REFACTORISATION-SOLID.md
 RESUME-REFACTORISATION.md
+TODO-LIST-COMPLETE.md
+DOCUMENTATION-INDEX.md
+QUICKSTART-COLLABORATEURS.md
+COLLABORATION.md
 
 # Cache
 .cache/
