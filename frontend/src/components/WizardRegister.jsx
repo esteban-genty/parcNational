@@ -18,7 +18,7 @@ export default function WizardRegister({ setUser }) {
     e.preventDefault();
     try {
       const response = await fetch(
-        "http://localhost/parcNational/backend/controllers/AuthController.php?action=register",
+        "http://localhost:8080/controllers/AuthController.php?action=register",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

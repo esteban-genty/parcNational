@@ -17,7 +17,7 @@ export default function WizardLogin({ setUser }) {
     e.preventDefault();
     try {
       const response = await fetch(
-        "http://localhost/parcNational/backend/controllers/AuthController.php?action=login",
+        "http://localhost:8080/controllers/AuthController.php?action=login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
