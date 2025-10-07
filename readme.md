@@ -1,4 +1,25 @@
-# 🌿 Parc National des Calanques – Application Web# 🌿 Parc National des Calanques – Marseille
+# �️ Parc National des Calanques – Application Web
+
+> **Gestion interactive du Parc National avec cartes Leaflet, authentification JWT et dashboard admin/visiteur**
+
+[![React](https://img.shields.io/badge/React-18.3-blue)](https://reactjs.org/)
+[![PHP](https://img.shields.io/badge/PHP-7.4-purple)](https://www.php.net/)
+[![Leaflet](https://img.shields.io/badge/Leaflet-1.9-green)](https://leafletjs.com/)
+[![Tests](https://img.shields.io/badge/Tests-100%25-brightgreen)](backend/tests/)
+
+---
+
+## 📚 DOCUMENTATION PROJET
+
+| Document | Description | Pour qui ? |
+|----------|-------------|------------|
+| **README.md** *(ce fichier)* | Installation + Présentation générale | Tout le monde |
+| **[AUDIT-PROJET.md](AUDIT-PROJET.md)** | État actuel détaillé + Ce qui manque | Développeurs + PM |
+| **[TODO-PROJET.md](TODO-PROJET.md)** | Tâches prioritaires (demain 8 Oct) | Développeurs |
+| **[PRESENTATION-DEMAIN.md](PRESENTATION-DEMAIN.md)** | Script présentation 8 Oct | Présentateur |
+| **[DOCUMENTATION.md](DOCUMENTATION.md)** | Guide collaborateurs + Dépannage | Équipe dev |
+
+---# 🌿 Parc National des Calanques – Marseille
 
 
 
