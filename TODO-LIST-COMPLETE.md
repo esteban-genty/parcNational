@@ -1,8 +1,10 @@
-# 📋 TODO LIST COMPLÈTE - Parc National
+# 📋 TODO LIST - Parc National des Calanques
 
 **Date de mise à jour :** 7 octobre 2025  
 **Tests unitaires :** ✅ **33/33 RÉUSSIS** (104 assertions)  
-**État global :** 🟢 **OPÉRATIONNEL**
+**État global :** 🟢 **PRODUCTION READY**
+
+> 📖 Voir [COLLABORATION.md](./COLLABORATION.md) pour synchroniser avec la branche `test`
 
 ---
 
@@ -59,6 +61,36 @@
 - [x] **create-admin.php** - Création compte admin
 - [x] **check-users.php** - Vérification utilisateurs existants
 - [x] **create-notifications.php** - Génération notifications
+
+---
+
+## 🎨 RÉCENTES AMÉLIORATIONS (7 octobre 2025)
+
+### ✨ Cartes Interactives Leaflet
+- [x] **CampingsMap.jsx** - Carte interactive des 7 campings avec markers verts
+- [x] **SentiersMap.jsx** - Carte des 10 sentiers avec couleurs par difficulté
+- [x] **RessourcesMap.jsx** - Carte des 24 ressources avec couleurs par type
+
+### 📄 Pages Complètes
+- [x] **SentiersPage.jsx** - Page avec carte + liste + légende (facile/moyen/difficile)
+- [x] **CampingsPage.jsx** - Page avec carte + cards + boutons réservation
+- [x] **RessourcesNaturellesPage.jsx** - Page avec carte + listes groupées par type
+
+### 🎨 Design System
+- [x] **icons.js** - 25+ icônes FontAwesome organisées par catégorie
+- [x] Remplacement de tous les emojis ASCII par FontAwesome
+- [x] Cohérence visuelle sur tous les composants
+
+### 🗄️ Base de Données
+- [x] **populate-database.php** - Script de peuplement avec données réelles
+- [x] 7 campings des Calanques (Sormiou, En Vau, Morgiou, etc.)
+- [x] 10 sentiers avec difficultés réelles
+- [x] 24 ressources naturelles (Flore, Faune, Marine, Géologie)
+
+### 🧹 Refactorisation
+- [x] **DashboardPage.jsx** - Réduction de 600+ lignes à 104 lignes
+- [x] Séparation des responsabilités (composants Maps + Pages séparées)
+- [x] Code propre et maintenable
 
 ---
 
