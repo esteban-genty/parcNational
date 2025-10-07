@@ -70,4 +70,23 @@ class Reservation {
             $row = $this->findById($id);
             return $row ? true : false;
         }
+        public function selectReservation($id) 
+        {
+           $query = "SELECT r.*, c.nom as camping_nom, c.localisation
+                  FROM reservation r
+                  JOIN camping c ON r.camping_id = c.id
+                  JOIN visiteur v ON r.visiteur_id = v.id
+                  WHERE v.utilisateur_id = :user_id
+                  ORDER BY r.date_debut DESC";
+        
+        $stmt = $db->prepare($query);
+        $stmt->bindParam(':user_id', $id, PDO::PARAM_INT);
+
+        $stmt->execute();
+        
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC); 
+        return $result; 
+
+
+        }
 }

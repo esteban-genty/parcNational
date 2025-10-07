@@ -17,9 +17,8 @@ try {
     require_once '../../models/Notification.php';
     require_once '../../models/Database.php';
 
-    // 🗄️ Connexion à la base de données
-    $db = (new Database())->connect();
-    $model = new Notification($db);
+    // 🗄️ Modèle Notification (pas besoin de passer $db, il étend Database)
+    $model = new Notification();
 
     // 📍 Traitement des requêtes HTTP
     switch ($_SERVER['REQUEST_METHOD']) {

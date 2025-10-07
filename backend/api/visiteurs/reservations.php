@@ -2,8 +2,10 @@
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../models/Database.php';
 require_once __DIR__ . '/../../models/Visiteur.php';
+require_once __DIR__ . '/../../models/Reservation.php';
 require_once __DIR__ . '/../../utils/AuthMiddleware.php';
 require_once __DIR__ . '/../../utils/ResponseHelper.php';
+
 
 /**
  * API de gestion des réservations (Visiteurs authentifiés)
@@ -20,23 +22,16 @@ try {
 
     $database = new Database();
     $db = $database->getConnection();
+    $reservationsModels= new Reservation($db);
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Récupération des réservations de l'utilisateur connecté
-        $query = "SELECT r.*, c.nom as camping_nom, c.localisation
-                  FROM reservation r
-                  JOIN camping c ON r.camping_id = c.id
-                  JOIN visiteur v ON r.visiteur_id = v.id
-                  WHERE v.utilisateur_id = :user_id
-                  ORDER BY r.date_debut DESC";
-        
-        $stmt = $db->prepare($query);
-        $stmt->bindParam(':user_id', $payload['user_id']);
-        $stmt->execute();
-        
-        $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+        $reservations= $reservationsModels->selectReservation($payload['user_id']);
+        echo "coucou";
+                 
+
         ResponseHelper::success($reservations, "Réservations récupérées");
+
 
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Création d'une nouvelle réservation

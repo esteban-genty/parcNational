@@ -16,7 +16,7 @@ try {
     // 🗄️ Connexion à la base de données
     $database = new Database();
     $db = $database->connect();
-    $notification = new Notification($db);
+    $notification = new Notification();
 
     // 📝 Notifications de test
     $notifications = [
