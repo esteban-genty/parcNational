@@ -27,10 +27,10 @@
 
 ---
 
-### 2. Séparation du Code (Clean Architecture) ✅
+### . Séparation du Code (Clean Architecture) ✅
 **Quoi** : J'ai cassé le gros fichier de 600 lignes en petits morceaux
 
-### 3. Remplacement des Emojis (merci joris) ✅
+### . Remplacement des Emojis (merci joris) ✅
 **Quoi** : Tous les emojis (🏕️, 🥾, 🗺️) remplacés par des icônes FontAwesome
 
 **Pourquoi** :
