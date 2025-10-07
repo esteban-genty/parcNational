@@ -1,46 +1,49 @@
 <?php
 // AuthController : gestion de l'authentification et du profil utilisateur (admin/visiteur)
 
-// Gestion CORS (DOIT être en premier, avant session_start)
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-header("Access-Control-Allow-Credentials: true");
-header("Content-Type: application/json");
+require_once __DIR__ . '/../utils/BaseController.php';
+require_once __DIR__ . '/../models/AuthModel.php';
 
-// Gestion des requêtes OPTIONS (preflight)
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
+// Le constructeur BaseController configure les CORS automatiquement
+$baseController = new BaseController();
 
+// Démarrer la session APRÈS les headers CORS
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once __DIR__ . '/../models/AuthModel.php';
-
-class AuthController {
+class AuthController extends BaseController {
 
     // Enregistrement d'un utilisateur (admin ou visiteur)
-    public function handleRequestRegister(): array {
+    public function handleRequestRegister(): void {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return ["success" => false, "error" => "Seules les requêtes POST sont autorisées"];
+            http_response_code(405);
+            echo json_encode(["success" => false, "error" => "Seules les requêtes POST sont autorisées"]);
+            exit();
         }
-        return $this->registerUser();
+        $result = $this->registerUser();
+        http_response_code($result['success'] ? 200 : 400);
+        echo json_encode($result);
+        exit();
     }
 
     // Connexion d'un utilisateur
-    public function handleRequestLogin(): array {
+    public function handleRequestLogin(): void {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return ["success" => false, "error" => "Seules les requêtes POST sont autorisées"];
+            http_response_code(405);
+            echo json_encode(["success" => false, "error" => "Seules les requêtes POST sont autorisées"]);
+            exit();
         }
-        return $this->loginUser();
+        $result = $this->loginUser();
+        http_response_code($result['success'] ? 200 : 401);
+        echo json_encode($result);
+        exit();
     }
 
     // Logique métier de connexion
     private function loginUser(): array {
-        $data = json_decode(file_get_contents("php://input"), true);
+        $data = $this->getJsonInput();
+
         if (!isset($data['email'], $data['mot_de_passe'])) {
             return ["success" => false, "error" => "Données manquantes"];
         }
@@ -65,7 +68,8 @@ class AuthController {
 
     // Logique métier d'enregistrement
     private function registerUser(): array {
-        $data = json_decode(file_get_contents("php://input"), true);
+        $data = $this->getJsonInput();
+
         if (!isset($data['nom'], $data['email'], $data['mot_de_passe'])) {
             return ["success" => false, "error" => "Données manquantes"];
         }
@@ -94,45 +98,52 @@ class AuthController {
     }
 
     // Déconnexion
-    public function logoutUser(): array {
+    public function logoutUser(): void {
         session_unset();
         session_destroy();
-        return ["success" => true, "message" => "Déconnexion réussie"];
+        http_response_code(200);
+        echo json_encode(["success" => true, "message" => "Déconnexion réussie"]);
+        exit();
     }
 
     // Vérification de session (profil utilisateur/admin)
-    public function checkSession(): array {
+    public function checkSession(): void {
         if (isset($_SESSION['user'])) {
-            return ["loggedIn" => true, "user" => $_SESSION['user']];
+            // Format spécial pour checkSession (pas enveloppé dans "data")
+            http_response_code(200);
+            echo json_encode(["loggedIn" => true, "user" => $_SESSION['user']]);
+            exit();
+        } else {
+            http_response_code(200);
+            echo json_encode(["loggedIn" => false]);
+            exit();
         }
-        return ["loggedIn" => false];
     }
 }
 
-
+// Le constructeur de BaseController configure automatiquement les CORS
 $controller = new AuthController();
 $action = $_GET['action'] ?? '';
 
 switch ($action) {
     case 'register':
-        $response = $controller->handleRequestRegister();
+        $controller->handleRequestRegister();
         break;
     case 'login':
-        $response = $controller->handleRequestLogin();
+        $controller->handleRequestLogin();
         break;
     case 'check':
-        $response = $controller->checkSession();
+        $controller->checkSession();
         break;
     case 'logout':
-        $response = $controller->logoutUser();
+        $controller->logoutUser();
         break;
     default:
-        $response = [
-            "success" => false,
-            "error"   => "Action non reconnue. Utilisez ?action=register, ?action=login, ?action=check ou ?action=logout"
-        ];
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Action non reconnue. Utilisez ?action=register, ?action=login, ?action=check ou ?action=logout'
+        ]);
         break;
 }
 
-
-echo json_encode($response);

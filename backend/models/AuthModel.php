@@ -18,13 +18,16 @@ class AuthModel extends Database {
         return $stmt->fetchColumn() > 0;
     }
 
-
+    /**
+     * Enregistre un nouvel utilisateur
+     * @return array|false Retourne les données utilisateur ou false en cas d'erreur
+     */
     public function register(
         string $nom, 
         string $email, 
         string $mot_de_passe, 
         string $role = "visiteur"
-    ): array|false {
+    ) {
         try {
             if ($this->emailExists($email)) {
                 return false;
@@ -58,7 +61,11 @@ class AuthModel extends Database {
         }
     }
 
-    public function login(string $email, string $mot_de_passe): array|false {
+    /**
+     * Connecte un utilisateur
+     * @return array|false Retourne les données utilisateur ou false en cas d'erreur
+     */
+    public function login(string $email, string $mot_de_passe) {
         $sql = "SELECT * FROM utilisateur WHERE email = :email";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([":email" => $email]);

@@ -1,61 +1,102 @@
 <?php
-// API Camping : gère les opérations CRUD sur les campings
+/**
+ * API Camping Unifiée - Public + Admin
+ * GET: Public | POST/PUT/DELETE: Admin seulement
+ */
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../models/Camping.php';
+require_once __DIR__ . '/../utils/AuthMiddelware.php';
+require_once __DIR__ . '/../utils/BaseController.php';
 
-
-$db = (new Database())->connect();
-$model = new Camping($db);
-
-header('Content-Type: application/json');
-
-$method = $_SERVER['REQUEST_METHOD'];
-
-switch ($method) {
-    case 'GET':
+class CampingController extends BaseController {
+    private Camping $model;
+    
+    public function __construct() {
+        $this->setCorsHeaders();
+        $this->model = new Camping();
+    }
+    
+    public function handle(): void {
+        $method = $_SERVER['REQUEST_METHOD'];
+        
+        switch ($method) {
+            case 'GET':
+                $this->handleGet();
+                break;
+            case 'POST':
+                $this->handlePost();
+                break;
+            case 'PUT':
+                $this->handlePut();
+                break;
+            case 'DELETE':
+                $this->handleDelete();
+                break;
+            default:
+                $this->jsonError("Méthode non autorisée", 405);
+        }
+    }
+    
+    private function handleGet(): void {
         if (isset($_GET['id'])) {
-            $camping = $model->findById($_GET['id']);
-            if ($camping) {
-                echo json_encode($camping);
-            } else {
-                http_response_code(404);
-                echo json_encode(['error' => 'Camping non trouvé']);
-            }
+            $camping = $this->model->findById($_GET['id']);
+            $camping ? $this->jsonSuccess($camping) : $this->jsonError("Camping non trouvé", 404);
         } else {
-            echo json_encode($model->findAll());
+            $this->jsonSuccess($this->model->findAll());
         }
-        break;
-    case 'POST':
-        $data = json_decode(file_get_contents('php://input'), true);
-        $created = $model->create($data);
-        if ($created) {
-            echo json_encode(['success' => true, 'camping' => $created]);
-        } else {
-            http_response_code(400);
-            echo json_encode(['error' => 'Erreur lors de la création']);
+    }
+    
+    private function handlePost(): void {
+        AuthMiddleware::requireAdmin();
+        $data = $this->getJsonInput();
+        
+        if (empty($data['nom']) || empty($data['localisation']) || empty($data['capacite'])) {
+            $this->jsonError("Données manquantes");
         }
-        break;
-    case 'PUT':
-        $data = json_decode(file_get_contents('php://input'), true);
-        $updated = $model->update($data);
-        if ($updated) {
-            echo json_encode(['success' => true, 'camping' => $updated]);
-        } else {
-            http_response_code(400);
-            echo json_encode(['error' => 'Erreur lors de la modification']);
+        
+        $result = $this->model->create(
+            $data['nom'],
+            $data['localisation'],
+            $data['capacite'],
+            $data['equipements'] ?? null
+        );
+        
+        $result ? $this->jsonSuccess($result, 201) : $this->jsonError("Erreur création");
+    }
+    
+    
+    private function handlePut(): void {
+        AuthMiddleware::requireAdmin();
+        $data = $this->getJsonInput();
+        
+        if (empty($data['id'])) {
+            $this->jsonError("ID manquant");
         }
-        break;
-    case 'DELETE':
-        $id = $_GET['id'] ?? null;
-        $deleted = $model->delete($id);
-        if ($deleted) {
-            echo json_encode(['success' => true, 'camping' => $deleted]);
-        } else {
-            http_response_code(400);
-            echo json_encode(['error' => 'Erreur lors de la suppression']);
+        
+        $result = $this->model->update(
+            $data['id'],
+            $data['nom'] ?? null,
+            $data['localisation'] ?? null,
+            $data['capacite'] ?? null,
+            $data['equipements'] ?? null
+        );
+        
+        $result ? $this->jsonSuccess($result) : $this->jsonError("Erreur mise à jour");
+    }
+    
+    private function handleDelete(): void {
+        AuthMiddleware::requireAdmin();
+        $data = $this->getJsonInput();
+        
+        if (empty($data['id'])) {
+            $this->jsonError("ID manquant");
         }
-        break;
-    default:
-        http_response_code(405);
-        echo json_encode(['error' => 'Méthode non autorisée']);
+        
+        $result = $this->model->delete($data['id']);
+        $result ? $this->jsonSuccess(['deleted' => true]) : $this->jsonError("Erreur suppression");
+    }
 }
+
+$controller = new CampingController();
+$controller->handle();
+
