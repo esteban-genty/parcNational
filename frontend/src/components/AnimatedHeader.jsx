@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import icons from '../utils/icons';
 import '../css/animations.css';
 
 export default function Header({ user, onLogout }) {
@@ -52,7 +54,7 @@ export default function Header({ user, onLogout }) {
               transition: 'all 0.3s ease',
               cursor: 'pointer'
             }}>
-              🏞️ Parc National
+              <FontAwesomeIcon icon={icons.mountain} />               <FontAwesomeIcon icon={icons.mountain} /> Parc National
             </h1>
           </Link>
 
@@ -65,7 +67,11 @@ export default function Header({ user, onLogout }) {
             {user ? (
               <>
                 <Link to="/dashboard" className="btn btn-primary">
-                  {user.role === 'admin' ? '⚙️ Admin' : '👤 Profil'}
+                  {user.role === 'admin' ? (
+                    <><FontAwesomeIcon icon={icons.cog} /> Admin</>
+                  ) : (
+                    <><FontAwesomeIcon icon={icons.user} /> Profil</>
+                  )}
                 </Link>
                 <button 
                   onClick={handleLogoutClick}
