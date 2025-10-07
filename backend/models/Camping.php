@@ -1,70 +1,84 @@
 <?php
 /**
- * Modèle Camping : représente un camping dans le parc national
+ * Modèle Camping - Pattern SOLID
+ * Single Responsibility: Gère uniquement les données camping
  */
-class Camping {
-    public $id;
-    public $nom;
-    public $localisation;
-    public $capacite;
+require_once __DIR__ . '/Database.php';
+
+class Camping extends Database {
     private $db;
 
-    public function __construct($db) {
-        $this->db = $db;
+    public function __construct() {
+        $this->db = $this->connect();
     }
 
-    public function findAll() {
-        $sql = "SELECT * FROM camping";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute();
+    public function findAll(): array {
+        $stmt = $this->db->query("SELECT * FROM camping");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function findById($id) {
-        $sql = "SELECT * FROM camping WHERE id = ?";
-        $stmt = $this->db->prepare($sql);
+    public function findById(int $id): ?array {
+        $stmt = $this->db->prepare("SELECT * FROM camping WHERE id = ?");
         $stmt->execute([$id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ?: null;
     }
 
-    public function create($data) {
-        if (empty($data['nom']) || empty($data['localisation']) || empty($data['capacite']) || $data['capacite'] <= 0) {
-            return false;
+    public function create(string $nom, string $localisation, int $capacite, ?string $equipements = null): ?array {
+        if ($capacite <= 0) return null;
+        
+        // Vérifier si la colonne equipements existe
+        try {
+            $stmt = $this->db->prepare(
+                "INSERT INTO camping (nom, localisation, capacite, equipements) VALUES (?, ?, ?, ?)"
+            );
+            $stmt->execute([$nom, $localisation, $capacite, $equipements]);
+        } catch (PDOException $e) {
+            // Si la colonne n'existe pas, utiliser la version simple
+            $stmt = $this->db->prepare(
+                "INSERT INTO camping (nom, localisation, capacite) VALUES (?, ?, ?)"
+            );
+            $stmt->execute([$nom, $localisation, $capacite]);
         }
-        $sql = "INSERT INTO camping (nom, localisation, capacite) VALUES (?, ?, ?)";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            $data['nom'],
-            $data['localisation'],
-            $data['capacite']
-        ]);
-        $id = $this->db->lastInsertId();
+        
+        return $this->findById($this->db->lastInsertId());
+    }
+
+    public function update(int $id, ?string $nom, ?string $localisation, ?int $capacite, ?string $equipements): ?array {
+        $camping = $this->findById($id);
+        if (!$camping) return null;
+        
+        // Vérifier si la colonne equipements existe
+        try {
+            $stmt = $this->db->prepare(
+                "UPDATE camping SET nom = ?, localisation = ?, capacite = ?, equipements = ? WHERE id = ?"
+            );
+            $stmt->execute([
+                $nom ?? $camping['nom'],
+                $localisation ?? $camping['localisation'],
+                $capacite ?? $camping['capacite'],
+                $equipements ?? $camping['equipements'] ?? null,
+                $id
+            ]);
+        } catch (PDOException $e) {
+            // Si la colonne n'existe pas, utiliser la version simple
+            $stmt = $this->db->prepare(
+                "UPDATE camping SET nom = ?, localisation = ?, capacite = ? WHERE id = ?"
+            );
+            $stmt->execute([
+                $nom ?? $camping['nom'],
+                $localisation ?? $camping['localisation'],
+                $capacite ?? $camping['capacite'],
+                $id
+            ]);
+        }
+        
         return $this->findById($id);
     }
 
-    public function update($data) {
-        if (empty($data['id'])) return false;
-        $sql = "UPDATE camping SET nom = ?, localisation = ?, capacite = ? WHERE id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([
-            $data['nom'] ?? null,
-            $data['localisation'] ?? null,
-            $data['capacite'] ?? null,
-            $data['id']
-        ]);
-        return $this->findById($data['id']);
+    public function delete(int $id): bool {
+        $stmt = $this->db->prepare("DELETE FROM camping WHERE id = ?");
+        return $stmt->execute([$id]);
     }
-
-    public function delete($id) {
-        $row = $this->findById($id);
-        $sql = "DELETE FROM camping WHERE id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$id]);
-        return $row;
-    }
-        // Ajout méthode read pour les tests
-        public function read($id) {
-            $row = $this->findById($id);
-            return $row ? true : false;
-        }
 }
+
