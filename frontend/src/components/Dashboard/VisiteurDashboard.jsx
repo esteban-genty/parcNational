@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import icons from '../../utils/icons';
 import { useNotifications } from '../../hooks/useAPI';
 import MeteoWidget from './MeteoWidget';
 import '../../css/animations.css';
@@ -61,7 +63,9 @@ export default function VisiteurDashboard({ user }) {
           textAlign: 'center',
           padding: '2rem'
         }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🗺️</div>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>
+            <FontAwesomeIcon icon={icons.map} />
+          </div>
           <h3>Voir les Sentiers</h3>
           <p style={{ opacity: 0.9 }}>Explorez les parcours</p>
         </a>
@@ -73,7 +77,9 @@ export default function VisiteurDashboard({ user }) {
           textAlign: 'center',
           padding: '2rem'
         }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🏕️</div>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>
+            <FontAwesomeIcon icon={icons.camping} />
+          </div>
           <h3>Réserver un Camping</h3>
           <p style={{ opacity: 0.9 }}>Trouvez votre emplacement</p>
         </a>
@@ -85,7 +91,9 @@ export default function VisiteurDashboard({ user }) {
           textAlign: 'center',
           padding: '2rem'
         }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🌿</div>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>
+            <FontAwesomeIcon icon={icons.leaf} />
+          </div>
           <h3>Ressources Naturelles</h3>
           <p style={{ opacity: 0.9 }}>Découvrez la biodiversité</p>
         </a>
@@ -95,7 +103,7 @@ export default function VisiteurDashboard({ user }) {
       {notifications.length > 0 && (
         <div>
           <h3 className="text-gradient" style={{ marginBottom: '1.5rem' }}>
-            🔔 Alertes et Informations
+            <FontAwesomeIcon icon={icons.bell} /> Alertes et Informations
           </h3>
           <div className="grid" style={{ gap: '1rem' }}>
             {notifications.slice(0, 3).map((notif) => (
