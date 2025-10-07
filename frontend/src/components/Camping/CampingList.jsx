@@ -5,7 +5,7 @@ export default function CampingList() {
   const [campings, setCampings] = useState([]);
 
   useEffect(() => {
-    fetch('/parcNational/backend/api/public/camping.php')
+    fetch('http://localhost:8080/api/camping.php')
       .then(res => res.json())
       .then(data => setCampings(data));
   }, []);

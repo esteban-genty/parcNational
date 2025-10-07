@@ -8,7 +8,7 @@ export default function CampingForm({ mode }) {
 
   useEffect(() => {
     if (mode === 'edit' && id) {
-      fetch(`/parcNational/backend/api/public/camping.php?id=${id}`)
+      fetch(`http://localhost:8080/api/camping.php?id=${id}`)
         .then(res => res.json())
         .then(data => setForm(data));
     }
@@ -21,7 +21,7 @@ export default function CampingForm({ mode }) {
   const handleSubmit = e => {
     e.preventDefault();
     const method = mode === 'edit' ? 'PUT' : 'POST';
-    fetch(`/parcNational/backend/api/public/camping.php${mode === 'edit' ? `?id=${id}` : ''}`, {
+    fetch(`http://localhost:8080/api/camping.php${mode === 'edit' ? `?id=${id}` : ''}`, {
       method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form)

@@ -8,7 +8,7 @@ function CampingDetail() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    fetch(`/parcNational/backend/api/public/camping.php?id=${id}`)
+    fetch(`http://localhost:8080/api/camping.php?id=${id}`)
       .then(res => res.json())
       .then(data => setCamping(data));
     // Vérifie le rôle admin (exemple: token dans localStorage)
@@ -23,7 +23,7 @@ function CampingDetail() {
     const token = localStorage.getItem('access_token');
     if (!token) return alert('Token admin manquant');
     if (!window.confirm('Supprimer ce camping ?')) return;
-    fetch(`/parcNational/backend/api/admin/camping.php?id=${id}`, {
+    fetch(`http://localhost:8080/api/camping.php?id=${id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
