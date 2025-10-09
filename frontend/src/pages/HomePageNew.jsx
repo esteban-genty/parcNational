@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import icons from '../utils/icons';
 import bgHome from '../assets/bg-home.jpeg';
 import '../css/animations.css';
+import '../css/HomePageNew.css';
 
 // Ressources terrestres
 import forest from '../assets/terrestrial/forêts.jpg';
@@ -47,37 +48,14 @@ export default function HomePage() {
   }, []);
 
   if (showTeaser) {
+    const teaserBg = `linear-gradient(135deg, rgba(30,77,123,0.9), rgba(46,169,200,0.8)), url(${bgHome}) center/cover`;
     return (
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: `linear-gradient(135deg, rgba(30,77,123,0.9), rgba(46,169,200,0.8)), url(${bgHome}) center/cover`,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 9999,
-        animation: 'fadeOut 1s ease 2.5s forwards'
-      }}>
-        <style>{`
-          @keyframes fadeOut {
-            to {
-              opacity: 0;
-              visibility: hidden;
-            }
-          }
-        `}</style>
-        <div style={{
-          textAlign: 'center',
-          color: 'white',
-          animation: 'scaleIn 1.2s ease-out'
-        }}>
-          <h1 style={{ fontSize: '4rem', fontWeight: '900', marginBottom: '1rem' }}>
+      <div className="home-teaser" style={{ background: teaserBg }}>
+        <div className="home-teaser-content">
+          <h1 className="home-teaser-title">
             <FontAwesomeIcon icon={icons.mountain} /> Parc National des Calanques
           </h1>
-          <p style={{ fontSize: '1.5rem', fontWeight: '300' }}>
+          <p className="home-teaser-subtitle">
             Un écrin naturel entre mer et falaises
           </p>
         </div>

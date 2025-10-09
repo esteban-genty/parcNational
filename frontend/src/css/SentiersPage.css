@@ -1,0 +1,105 @@
+/* SentiersPage.css - Styles pour la page des sentiers */
+
+/* Message de chargement */
+.sentiers-loading {
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Légende de la carte */
+.sentiers-legend {
+  margin-bottom: 2rem;
+}
+
+.sentiers-legend-items {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.sentiers-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sentiers-legend-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.sentiers-legend-dot.facile {
+  background-color: #27ae60;
+}
+
+.sentiers-legend-dot.moyen {
+  background-color: #f39c12;
+}
+
+.sentiers-legend-dot.difficile {
+  background-color: #e74c3c;
+}
+
+/* Container de la carte */
+.sentiers-map-card {
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+
+/* Section liste des sentiers */
+.sentiers-list-title {
+  margin-bottom: 1.5rem;
+}
+
+.sentiers-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.sentier-card {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sentier-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sentier-card-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: var(--parc-bleu);
+}
+
+.sentier-card-info {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.sentier-card-description {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.9rem;
+  opacity: 0.7;
+  line-height: 1.4;
+}
+
+/* Bordure latérale colorée par difficulté */
+.sentier-card.border-facile {
+  border-left: 4px solid #27ae60;
+}
+
+.sentier-card.border-moyen {
+  border-left: 4px solid #f39c12;
+}
+
+.sentier-card.border-difficile {
+  border-left: 4px solid #e74c3c;
+}
+
+.sentier-card.border-default {
+  border-left: 4px solid #95a5a6;
+}
+

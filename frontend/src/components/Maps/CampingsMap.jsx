@@ -1,5 +1,6 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import '../../css/CampingsMap.css';
 import L from 'leaflet';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import icons from '../../utils/icons';
@@ -15,19 +16,11 @@ L.Icon.Default.mergeOptions({
 export default function CampingsMap({ campings }) {
   const center = [43.2095, 5.4378];
 
-  const getCampingPosition = (index) => {
-    const positions = [
-      [43.2095, 5.4378], [43.218, 5.428], [43.204, 5.449], [43.213, 5.455],
-      [43.225, 5.438], [43.197, 5.441], [43.215, 5.421]
-    ];
-    return positions[index % positions.length];
-  };
-
   return (
     <MapContainer 
       center={center} 
       zoom={12} 
-      style={{ height: '600px', width: '100%' }}
+      className="campings-map-container"
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -35,27 +28,31 @@ export default function CampingsMap({ campings }) {
       />
       
       {campings.map((camping, index) => {
-        const position = getCampingPosition(index);
+        // Utiliser les coordonnées GPS de la BDD, ou fallback sur le centre
+        const position = camping.latitude && camping.longitude 
+          ? [parseFloat(camping.latitude), parseFloat(camping.longitude)]
+          : center;
+        
         return (
           <Marker 
             key={camping.id} 
             position={position}
             icon={L.divIcon({
               className: 'custom-marker',
-              html: `<div style="background-color: #27ae60; width: 35px; height: 35px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"></div>`,
+              html: `<div class="camping-marker"></div>`,
               iconSize: [35, 35],
               iconAnchor: [17, 17]
             })}
           >
             <Popup>
-              <div style={{ minWidth: '250px' }}>
-                <h4 style={{ marginBottom: '0.5rem', color: '#2c3e50' }}>
+              <div className="camping-popup">
+                <h4 className="camping-popup-title">
                   {camping.nom}
                 </h4>
-                <p style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>
+                <p className="camping-popup-info">
                   <strong>Localisation:</strong> {camping.localisation}
                 </p>
-                <p style={{ margin: '0.25rem 0', fontSize: '0.9rem' }}>
+                <p className="camping-popup-info">
                   <strong>Capacité:</strong> {camping.capacite} places
                 </p>
               </div>

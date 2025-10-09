@@ -1,0 +1,83 @@
+/* SentiersMap.css - Styles pour la carte des sentiers */
+
+/* Container de la carte */
+.sentiers-map-container {
+  height: 600px;
+  width: 100%;
+}
+
+/* Popup de la carte */
+.sentier-popup {
+  min-width: 250px;
+}
+
+.sentier-popup-title {
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.sentier-popup-info {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+}
+
+.sentier-popup-description {
+  margin: 0.5rem 0 0 0;
+  font-size: 0.85rem;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
+/* Badge de difficulté */
+.sentier-difficulty-badge {
+  margin-left: 0.5rem;
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: white;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+  font-weight: 500;
+}
+
+.sentier-difficulty-badge.facile {
+  background-color: #27ae60;
+}
+
+.sentier-difficulty-badge.moyen {
+  background-color: #f39c12;
+}
+
+.sentier-difficulty-badge.difficile {
+  background-color: #e74c3c;
+}
+
+.sentier-difficulty-badge.default {
+  background-color: #95a5a6;
+}
+
+/* Marker personnalisé */
+.sentier-marker {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.sentier-marker.facile {
+  background-color: #27ae60;
+}
+
+.sentier-marker.moyen {
+  background-color: #f39c12;
+}
+
+.sentier-marker.difficile {
+  background-color: #e74c3c;
+}
+
+.sentier-marker.default {
+  background-color: #95a5a6;
+}
