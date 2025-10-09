@@ -25,7 +25,9 @@ import {
   faSearch,
   faFilter,
   faDownload,
-  faUpload
+  faUpload,
+  faEye,
+  faSpinner
 } from '@fortawesome/free-solid-svg-icons';
 
 const icons = {
@@ -66,7 +68,9 @@ const icons = {
   search: faSearch,
   filter: faFilter,
   download: faDownload,
-  upload: faUpload
+  upload: faUpload,
+  eye: faEye,
+  spinner: faSpinner
 };
 
 export default icons;

@@ -1,28 +1,41 @@
 import { Routes, Route } from "react-router-dom";
-import ProtectedRoute from "../ProtectedRoute";
 
-// Pages internes
-function Sentiers() { return <h2>Gestion des sentiers</h2>; }
-function Camping() { return <h2>Réservations camping</h2>; }
-function Ressources() { return <h2>Ressources naturelles</h2>; }
+// Pages visiteur
+import SentiersPage from "../../pages/visiteur/SentiersPage";
+import CampingsPage from "../../pages/visiteur/CampingsPage";
+import RessourcesPage from "../../pages/visiteur/RessourcesNaturellesPage";
 
-// Page importée
-import Account from "../../pages/AccountPage";
+// Pages admin
+import CampingsAdminPage from "../../pages/admin/CampingsAdminPage";
 
+// Page compte
+import AccountPage from "../../pages/auth/AccountPage";
+
+/**
+ * DashboardRouter - Gère les routes INTERNES du dashboard
+ * 
+ * Routes disponibles :
+ * - /dashboard/sentiers       → Liste des sentiers (public)
+ * - /dashboard/camping        → Liste des campings (public)
+ * - /dashboard/ressources     → Liste des ressources naturelles (public)
+ * - /dashboard/admin/campings → Gestion admin des campings (admin uniquement)
+ * - /dashboard/comptes        → Gestion des comptes (admin uniquement)
+ */
 export default function DashboardRouter({ userRole }) {
   return (
     <Routes>
-      <Route path="sentiers" element={<Sentiers />} />
-      <Route path="camping" element={<Camping />} />
-      <Route path="ressources" element={<Ressources />} />
-      <Route
-        path="comptes"
-        element={
-          <ProtectedRoute userRole={userRole}>
-            <Account />
-          </ProtectedRoute>
-        }
-      />
+      {/* Routes visiteur - Accessibles à tous */}
+      <Route path="sentiers" element={<SentiersPage />} />
+      <Route path="camping" element={<CampingsPage />} />
+      <Route path="ressources" element={<RessourcesPage />} />
+      
+      {/* Routes admin - Accessibles uniquement aux admins */}
+      {userRole === 'admin' && (
+        <>
+          <Route path="admin/campings" element={<CampingsAdminPage />} />
+          <Route path="comptes" element={<AccountPage />} />
+        </>
+      )}
     </Routes>
   );
 }

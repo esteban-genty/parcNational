@@ -17,7 +17,7 @@ export default function WizardLogin({ setUser }) {
     e.preventDefault();
     try {
       const response = await fetch(
-        "http://localhost:8080/controllers/AuthController.php?action=login",
+        "http://localhost:8080/api/auth/login.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -26,17 +26,27 @@ export default function WizardLogin({ setUser }) {
         }
       );
       const data = await response.json();
-      if (data.success) {
-        setUser(data.user);
-        // Vérification email et rôle admin
-        if (data.user && data.user.role === 'admin') {
+      
+      // L'API retourne { success: true, data: { user, tokens } }
+      if (data.success && data.data?.user) {
+        setUser(data.data.user);
+        
+        // Stocker les tokens JWT
+        if (data.data.tokens?.access_token) {
+          localStorage.setItem('access_token', data.data.tokens.access_token);
+          localStorage.setItem('refresh_token', data.data.tokens.refresh_token);
+        }
+        
+        // Vérification rôle admin
+        if (data.data.user.role === 'admin') {
           localStorage.setItem('isAdmin', 'true');
         } else {
           localStorage.removeItem('isAdmin');
         }
+        
         navigate("/dashboard");
       } else {
-        setMessage(data.error || "Erreur lors de la connexion");
+        setMessage(data.message || data.error || "Erreur lors de la connexion");
       }
     } catch (error) {
       setMessage("Erreur : " + error.message);

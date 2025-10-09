@@ -15,10 +15,15 @@ export function useAPI() {
     setError(null);
 
     try {
+      // Récupérer le token JWT depuis localStorage
+      const token = localStorage.getItem('access_token');
+      
       const response = await fetch(`${API_BASE}${endpoint}`, {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          // Ajouter le token JWT si disponible
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
           ...options.headers,
         },
         ...options,
@@ -68,32 +73,56 @@ export function useAPI() {
 }
 
 /**
- * Hook pour l'authentification
+ * Hook pour l'authentification (API moderne avec JWT)
  */
 export function useAuth() {
   const { post, get } = useAPI();
 
   const login = useCallback(async (email, mot_de_passe) => {
-    return await post('/controllers/AuthController.php?action=login', {
+    // Utilise la nouvelle API JWT
+    const response = await post('/api/auth/login.php', {
       email,
       mot_de_passe,
     });
+    
+    // Stocker le token JWT dans localStorage
+    if (response.tokens?.access_token) {
+      localStorage.setItem('access_token', response.tokens.access_token);
+      localStorage.setItem('refresh_token', response.tokens.refresh_token);
+    }
+    
+    return response;
   }, [post]);
 
   const register = useCallback(async (nom, email, mot_de_passe) => {
-    return await post('/controllers/AuthController.php?action=register', {
+    // Utilise la nouvelle API JWT
+    const response = await post('/api/auth/register.php', {
       nom,
       email,
       mot_de_passe,
     });
+    
+    // Stocker le token JWT dans localStorage
+    if (response.tokens?.access_token) {
+      localStorage.setItem('access_token', response.tokens.access_token);
+      localStorage.setItem('refresh_token', response.tokens.refresh_token);
+    }
+    
+    return response;
   }, [post]);
 
   const logout = useCallback(async () => {
-    return await post('/controllers/AuthController.php?action=logout');
+    // Supprimer les tokens
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    
+    // Appeler l'API de déconnexion
+    return await post('/api/auth/logout.php');
   }, [post]);
 
   const checkSession = useCallback(async () => {
-    return await get('/controllers/AuthController.php?action=check');
+    // Vérifier avec la nouvelle API profile
+    return await get('/api/auth/profile.php');
   }, [get]);
 
   return { login, register, logout, checkSession };

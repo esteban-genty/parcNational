@@ -18,7 +18,7 @@ export default function WizardRegister({ setUser }) {
     e.preventDefault();
     try {
       const response = await fetch(
-        "http://localhost:8080/controllers/AuthController.php?action=register",
+        "http://localhost:8080/api/auth/register.php",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -27,14 +27,23 @@ export default function WizardRegister({ setUser }) {
         }
       );
       const data = await response.json();
-      if (data.success) {
+      
+      // L'API retourne { success: true, data: { user, tokens } }
+      if (data.success && data.data?.user) {
         setNom("");
         setEmail("");
         setMotDePasse("");
-        setUser(data.user);
+        setUser(data.data.user);
+        
+        // Stocker les tokens JWT
+        if (data.data.tokens?.access_token) {
+          localStorage.setItem('access_token', data.data.tokens.access_token);
+          localStorage.setItem('refresh_token', data.data.tokens.refresh_token);
+        }
+        
         navigate("/dashboard");
       } else {
-        setMessage(data.error || "Erreur lors de l'inscription");
+        setMessage(data.message || data.error || "Erreur lors de l'inscription");
       }
     } catch (error) {
       setMessage("Erreur " + error.message);
