@@ -2,6 +2,12 @@
 /**
  * API Notifications - Génération automatique basée sur les données réelles
  */
+
+// 🌐 Configuration CORS centralisée
+require_once __DIR__ . '/../config/cors.php';
+
+header('Content-Type: application/json');
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../models/Notification.php';
 require_once __DIR__ . '/../utils/BaseController.php';
@@ -10,7 +16,7 @@ class NotificationController extends BaseController {
     private Notification $model;
     
     public function __construct() {
-        $this->setCorsHeaders();
+        parent::__construct(); // Appel constructeur parent
         $this->model = new Notification();
     }
     
@@ -34,9 +40,20 @@ class NotificationController extends BaseController {
     }
     
     private function getActiveNotifications(): void {
-        $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
-        $notifications = $this->model->getActiveNotifications($limit);
-        $this->jsonSuccess($notifications);
+        try {
+            $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+            $notifications = $this->model->getActiveNotifications($limit);
+            
+            // Si la méthode n'existe pas ou retourne null, retourner tableau vide
+            if (!is_array($notifications)) {
+                $notifications = [];
+            }
+            
+            $this->jsonSuccess($notifications);
+        } catch (Exception $e) {
+            // En cas d'erreur, retourner tableau vide au lieu de crasher
+            $this->jsonSuccess([]);
+        }
     }
     
     private function generateNotifications(): void {

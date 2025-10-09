@@ -3,16 +3,22 @@
  * API Camping Unifiée - Public + Admin
  * GET: Public | POST/PUT/DELETE: Admin seulement
  */
+
+// 🌐 Configuration CORS centralisée
+require_once __DIR__ . '/../config/cors.php';
+
+header('Content-Type: application/json');
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../models/Camping.php';
-require_once __DIR__ . '/../utils/AuthMiddelware.php';
+require_once __DIR__ . '/../utils/AuthMiddleware.php';
 require_once __DIR__ . '/../utils/BaseController.php';
 
 class CampingController extends BaseController {
     private Camping $model;
     
     public function __construct() {
-        $this->setCorsHeaders();
+        parent::__construct(); // Appel constructeur parent
         $this->model = new Camping();
     }
     
