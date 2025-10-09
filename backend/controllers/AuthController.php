@@ -1,149 +1,170 @@
 <?php
-// AuthController : gestion de l'authentification et du profil utilisateur (admin/visiteur)
+require_once __DIR__ . '/../vendor/autoload.php';
+require_once "../models/AuthModel.php";
 
-require_once __DIR__ . '/../utils/BaseController.php';
-require_once __DIR__ . '/../models/AuthModel.php';
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
-// Le constructeur BaseController configure les CORS automatiquement
-$baseController = new BaseController();
+// Token JWT - more security : bin2hex(random_bytes(32))
+$secret_key = "bin2hexrandombytes32";
 
-// Démarrer la session APRÈS les headers CORS
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+// Configuration des en-têtes CORS
+header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Content-Type: application/json");
+header("Access-Control-Allow-Credentials: true");
 
-class AuthController extends BaseController {
+class AuthController {
 
-    // Enregistrement d'un utilisateur (admin ou visiteur)
-    public function handleRequestRegister(): void {
+    private string $secret_key;
+
+    public function __construct(string $secret_key) {
+        $this->secret_key = $secret_key;
+    }
+
+    // Register
+    public function handleRequestRegister(): array {
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return ["success" => true];
+        }
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            echo json_encode(["success" => false, "error" => "Seules les requêtes POST sont autorisées"]);
-            exit();
+            return ["success" => false, "error" => "Seules les requêtes POST sont autorisées"];
         }
-        $result = $this->registerUser();
-        http_response_code($result['success'] ? 200 : 400);
-        echo json_encode($result);
-        exit();
+
+        return $this->registerUser();
     }
 
-    // Connexion d'un utilisateur
-    public function handleRequestLogin(): void {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            echo json_encode(["success" => false, "error" => "Seules les requêtes POST sont autorisées"]);
-            exit();
-        }
-        $result = $this->loginUser();
-        http_response_code($result['success'] ? 200 : 401);
-        echo json_encode($result);
-        exit();
-    }
-
-    // Logique métier de connexion
-    private function loginUser(): array {
-        $data = $this->getJsonInput();
-
-        if (!isset($data['email'], $data['mot_de_passe'])) {
-            return ["success" => false, "error" => "Données manquantes"];
-        }
-        $email = htmlspecialchars(trim($data['email']));
-        $motDePasse = htmlspecialchars($data['mot_de_passe']);
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return ["success" => false, "error" => "Email invalide"];
-        }
-        $auth = new AuthModel();
-        $result = $auth->login($email, $motDePasse);
-        if ($result) {
-            $_SESSION['user'] = [
-                "id"    => $result['id'],
-                "nom"   => $result['nom'],
-                "email" => $result['email'],
-                "role"  => $result['role']
-            ];
-            return ["success" => true, "user" => $_SESSION['user']];
-        }
-        return ["success" => false, "error" => "Email ou mot de passe incorrect"];
-    }
-
-    // Logique métier d'enregistrement
     private function registerUser(): array {
-        $data = $this->getJsonInput();
+        try {
+            $data = json_decode(file_get_contents("php://input"), true);
+            if (!isset($data['nom'], $data['email'], $data['mot_de_passe'])) {
+                throw new Exception("Données manquantes");
+            }
 
-        if (!isset($data['nom'], $data['email'], $data['mot_de_passe'])) {
-            return ["success" => false, "error" => "Données manquantes"];
+            $nom = trim($data['nom']);
+            $email = trim($data['email']);
+            $motDePasse = $data['mot_de_passe'];
+            $role = $data['role'] ?? "visiteur";
+
+            htmlspecialchars($nom);
+            htmlspecialchars($email);
+            htmlspecialchars($motDePasse);
+
+            $auth = new AuthModel();
+            if ($auth->emailExists($email)) {
+                return ["success" => false, "error" => "Cet email est déjà utilisé."];
+            }
+
+            $user = $auth->register($nom, $email, $motDePasse, $role);
+            if (!$user) {
+                return ["success" => false, "error" => "Impossible d'enregistrer l'utilisateur"];
+            }
+
+            $token = $this->generateJWT($user);
+
+            return ["success" => true, "message" => "Inscription réussie", "token" => $token, "user" => $user];
+
+        } catch (Exception $e) {
+            http_response_code(500);
+            return ["success" => false, "error" => $e->getMessage()];
         }
-        $nom = htmlspecialchars(trim($data['nom']));
-        $email = htmlspecialchars(trim($data['email']));
-        $motDePasse = htmlspecialchars($data['mot_de_passe']);
-        $role = htmlspecialchars($data['role'] ?? "visiteur");
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return ["success" => false, "error" => "Email invalide"];
-        }
-        $auth = new AuthModel();
-        if ($auth->emailExists($email)) {
-            return ["success" => false, "error" => "Cet email est déjà utilisé."];
-        }
-        $user = $auth->register($nom, $email, $motDePasse, $role);
-        if ($user) {
-            $_SESSION['user'] = [
-                "id"    => $user['id'],
-                "nom"   => $user['nom'],
-                "email" => $user['email'],
-                "role"  => $user['role']
-            ];
-            return ["success" => true, "user" => $_SESSION['user']];
-        }
-        return ["success" => false, "error" => "Impossible d'enregistrer l'utilisateur"];
     }
 
-    // Déconnexion
-    public function logoutUser(): void {
-        session_unset();
-        session_destroy();
-        http_response_code(200);
-        echo json_encode(["success" => true, "message" => "Déconnexion réussie"]);
-        exit();
+    // Connexion
+    public function handleRequestLogin(): array {
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            return ["success" => true];
+        }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return ["success" => false, "error" => "Seules les requêtes POST sont autorisées"];
+        }
+
+        return $this->loginUser();
     }
 
-    // Vérification de session (profil utilisateur/admin)
-    public function checkSession(): void {
-        if (isset($_SESSION['user'])) {
-            // Format spécial pour checkSession (pas enveloppé dans "data")
-            http_response_code(200);
-            echo json_encode(["loggedIn" => true, "user" => $_SESSION['user']]);
-            exit();
-        } else {
-            http_response_code(200);
-            echo json_encode(["loggedIn" => false]);
-            exit();
+    private function loginUser(): array {
+        try {
+            $data = json_decode(file_get_contents("php://input"), true);
+            if (!isset($data['email'], $data['mot_de_passe'])) {
+                throw new Exception("Données manquantes");
+            }
+
+            $email = trim($data['email']);
+            $motDePasse = $data['mot_de_passe'];
+            htmlspecialchars($email);
+            htmlspecialchars($motDePasse);
+
+            $auth = new AuthModel();
+            $user = $auth->login($email, $motDePasse);
+            if (!$user) {
+                return ["success" => false, "error" => "Email ou mot de passe incorrect"];
+            }
+
+            $token = $this->generateJWT($user);
+
+            return ["success" => true, "message" => "Connexion réussie", "token" => $token, "user" => $user];
+
+        } catch (Exception $e) {
+            http_response_code(500);
+            return ["success" => false, "error" => $e->getMessage()];
         }
+    }
+
+    // Check session need token
+    public function checkSession(): array {
+        $headers = getallheaders();
+        if (!isset($headers['Authorization'])) {
+            return ["loggedIn" => false, "error" => "Token manquant"];
+        }
+
+        $authHeader = $headers['Authorization'];
+        if (!preg_match('/Bearer\s(\S+)/', $authHeader, $matches)) {
+            return ["loggedIn" => false, "error" => "Format du token invalide"];
+        }
+
+        $token = $matches[1];
+
+        try {
+            $decoded = JWT::decode($token, new Key($this->secret_key, 'HS256'));
+            return ["loggedIn" => true, "user" => (array) $decoded];
+        } catch (Exception $e) {
+            return ["loggedIn" => false, "error" => "Token invalide ou expiré"];
+        }
+    }
+
+    // Lougout delete token ( React )
+    public function logoutUser(): array {
+        return ["success" => true, "message" => "Déconnexion réussie"];
+    }
+
+    // Generate JWT
+    private function generateJWT(array $user): string {
+        $payload = [
+            "id" => $user['id'],
+            "nom" => $user['nom'],
+            "email" => $user['email'],
+            "role" => $user['role'],
+            "iat" => time(),
+            "exp" => time() + 3600 // 1hour
+        ];
+
+        return JWT::encode($payload, $this->secret_key, 'HS256');
     }
 }
 
-// Le constructeur de BaseController configure automatiquement les CORS
-$controller = new AuthController();
+// Router
+$controller = new AuthController($secret_key);
 $action = $_GET['action'] ?? '';
 
-switch ($action) {
-    case 'register':
-        $controller->handleRequestRegister();
-        break;
-    case 'login':
-        $controller->handleRequestLogin();
-        break;
-    case 'check':
-        $controller->checkSession();
-        break;
-    case 'logout':
-        $controller->logoutUser();
-        break;
-    default:
-        http_response_code(400);
-        echo json_encode([
-            'success' => false,
-            'error' => 'Action non reconnue. Utilisez ?action=register, ?action=login, ?action=check ou ?action=logout'
-        ]);
-        break;
-}
+$response = match($action) {
+    'register' => $controller->handleRequestRegister(),
+    'login'    => $controller->handleRequestLogin(),
+    'check'    => $controller->checkSession(),
+    'logout'   => $controller->logoutUser(),
+    default    => ["success" => false, "error" => "Action non reconnue. Utilisez ?action=register, ?action=login, ?action=check ou ?action=logout"]
+};
 
+echo json_encode($response);
