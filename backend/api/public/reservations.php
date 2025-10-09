@@ -1,7 +1,11 @@
 <?php
+// 🌐 Configuration CORS centralisée
+require_once __DIR__ . '/../../config/cors.php';
+
+header('Content-Type: application/json');
+
 require_once '../../models/Reservation.php';
 require_once '../../models/Database.php';
-header('Content-Type: application/json');
 
 $db = (new Database())->connect();
 $model = new Reservation($db);

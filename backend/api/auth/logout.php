@@ -1,4 +1,9 @@
 <?php
+// 🌐 Configuration CORS centralisée
+require_once __DIR__ . '/../../config/cors.php';
+
+header('Content-Type: application/json');
+
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../utils/AuthMiddleware.php';
 require_once __DIR__ . '/../../utils/ResponseHelper.php';
