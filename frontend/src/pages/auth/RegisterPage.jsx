@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import WizardRegister from "../components/WizardRegister";
-import '../css/root.css'
-import '../css/register.css'
+import WizardRegister from "../../components/WizardRegister";
+import '../../css/root.css'
+import '../../css/register.css'
 
 export default function RegisterPage({ setUser }) {
   useEffect(() => {

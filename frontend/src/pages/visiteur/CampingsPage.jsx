@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import icons from '../utils/icons';
-import CampingsMap from '../components/Maps/CampingsMap';
+import icons from '../../utils/icons';
+import CampingsMap from '../../components/Maps/CampingsMap';
 
 export default function CampingsPage() {
   const [campings, setCampings] = useState([]);

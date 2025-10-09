@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import icons from '../utils/icons';
-import RessourcesMap from '../components/Maps/RessourcesMap';
+import icons from '../../utils/icons';
+import RessourcesMap from '../../components/Maps/RessourcesMap';
 
 export default function RessourcesNaturellesPage() {
   const [ressources, setRessources] = useState([]);

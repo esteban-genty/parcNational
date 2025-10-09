@@ -1,17 +1,20 @@
 import { Link, Routes, Route } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import icons from '../utils/icons';
-import '../css/dashboard-new.css';
-import '../css/animations.css';
+import icons from '../../utils/icons';
+import '../../css/dashboard-new.css';
+import '../../css/animations.css';
 
 // Components
-import AdminDashboard from "../components/Dashboard/AdminDashboard";
-import VisiteurDashboard from "../components/Dashboard/VisiteurDashboard";
+import AdminDashboard from "../../components/Dashboard/AdminDashboard";
+import VisiteurDashboard from "../../components/Dashboard/VisiteurDashboard";
 
 // Pages
 import SentiersPage from "./SentiersPage";
 import CampingsPage from "./CampingsPage";
 import RessourcesNaturellesPage from "./RessourcesNaturellesPage";
+
+// Pages Admin
+import CampingsAdminPage from "../admin/CampingsAdminPage";
 
 export default function Dashboard({ user }) {
   if (!user) {
@@ -48,7 +51,7 @@ export default function Dashboard({ user }) {
               <Link to="/dashboard" className="nav-link">
                 <FontAwesomeIcon icon={icons.chart} /> Vue d'ensemble
               </Link>
-              <Link to="/dashboard/camping" className="nav-link">
+              <Link to="/dashboard/admin/campings" className="nav-link">
                 <FontAwesomeIcon icon={icons.camping} /> Gestion des campings
               </Link>
               <Link to="/dashboard/sentiers" className="nav-link">
@@ -96,6 +99,11 @@ export default function Dashboard({ user }) {
           <Route path="/sentiers" element={<SentiersPage />} />
           <Route path="/camping" element={<CampingsPage />} />
           <Route path="/ressources" element={<RessourcesNaturellesPage />} />
+          
+          {/* Routes Admin */}
+          {user.role === 'admin' && (
+            <Route path="/admin/campings" element={<CampingsAdminPage />} />
+          )}
         </Routes>
       </main>
     </div>

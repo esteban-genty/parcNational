@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import WizardLogin from "../components/WizardLogin";
-import '../css/root.css'
-import '../css/login.css'
+import WizardLogin from "../../components/WizardLogin";
+import '../../css/root.css'
+import '../../css/login.css'
 
 export default function LoginPage({ setUser }) {
   useEffect(() => {
