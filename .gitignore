@@ -53,6 +53,20 @@ DOCUMENTATION-INDEX.md
 QUICKSTART-COLLABORATEURS.md
 COLLABORATION.md
 
+# Documentation sensible (notes de développement)
+TODO-PROJET.md
+PRESENTATION-DEMAIN.md
+AUDIT-TESTS-COMPLET.md
+AUDIT-PROJET.md
+backend/tests/TestStatus.md
+backend/cahier-tests-unitaires.md
+migration-jwt-complete.txt
+
+# Fichiers SQL sensibles (données de test/production)
+backend/database/*.sql
+backend/tests/Helper/*.sql
+oussama.session.sql
+
 # Cache
 .cache/
 *.cache
