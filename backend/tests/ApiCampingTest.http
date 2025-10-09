@@ -1,0 +1,40 @@
+### Liste des campings (GET)
+GET http://localhost/parcNational/backend/api/public/camping.php
+
+### Détail d’un camping (GET)
+GET http://localhost/parcNational/backend/api/public/camping.php?id=24
+
+### Création d’un camping (POST)
+POST http://localhost/parcNational/backend/api/public/camping.php
+Content-Type: application/json
+
+{
+  "nom": "Camping du Cap",
+  "localisation": "Calanque de Sormiou",
+  "capacite": 50
+}
+
+### Connexion admin
+POST http://localhost/parcNational/backend/api/auth/login.php
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "mot_de_passe": "adminpassword"
+}
+
+### Modification d’un camping (PUT, admin)
+PUT http://localhost/parcNational/backend/api/admin/camping.php?id=24
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6...
+
+{
+  "id": 24,
+  "nom": "Camping du Cap - Modifié",
+  "localisation": "Calanque de Morgiou",
+  "capacite": 60
+}
+
+### Suppression d’un camping (DELETE, admin)
+DELETE http://localhost/parcNational/backend/api/admin/camping.php?id=24
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6

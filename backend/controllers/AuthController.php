@@ -1,181 +1,149 @@
 <?php
-session_start();
+// AuthController : gestion de l'authentification et du profil utilisateur (admin/visiteur)
 
-// Configuration des en-têtes CORS
-header("Access-Control-Allow-Origin: http://localhost:5173");
-header("Access-Control-Allow-Headers: Content-Type, Authorization");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Content-Type: application/json");
-header("Access-Control-Allow-Credentials: true");
+require_once __DIR__ . '/../utils/BaseController.php';
+require_once __DIR__ . '/../models/AuthModel.php';
 
-require_once "../models/AuthModel.php";
+// Le constructeur BaseController configure les CORS automatiquement
+$baseController = new BaseController();
 
-class AuthController {
+// Démarrer la session APRÈS les headers CORS
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-    public function handleRequestRegister(): array {
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            http_response_code(200);
-            return ["success" => true];
-        }
+class AuthController extends BaseController {
 
+    // Enregistrement d'un utilisateur (admin ou visiteur)
+    public function handleRequestRegister(): void {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return [
-                "success" => false,
-                "error"   => "Seules les requêtes POST sont autorisées"
-            ];
+            http_response_code(405);
+            echo json_encode(["success" => false, "error" => "Seules les requêtes POST sont autorisées"]);
+            exit();
         }
-
-        return $this->registerUser();
+        $result = $this->registerUser();
+        http_response_code($result['success'] ? 200 : 400);
+        echo json_encode($result);
+        exit();
     }
 
-    public function handleRequestLogin(): array {
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            http_response_code(200);
-            return ["success" => true];
-        }
-
+    // Connexion d'un utilisateur
+    public function handleRequestLogin(): void {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            return [
-                "success" => false,
-                "error"   => "Seules les requêtes POST sont autorisées"
-            ];
+            http_response_code(405);
+            echo json_encode(["success" => false, "error" => "Seules les requêtes POST sont autorisées"]);
+            exit();
         }
-
-        return $this->loginUser();
+        $result = $this->loginUser();
+        http_response_code($result['success'] ? 200 : 401);
+        echo json_encode($result);
+        exit();
     }
 
+    // Logique métier de connexion
     private function loginUser(): array {
-        try {
-            $data = json_decode(file_get_contents("php://input"), true);
+        $data = $this->getJsonInput();
 
-            if (!isset($data['email'], $data['mot_de_passe'])) {
-                throw new Exception("Données manquantes");
-            }
-
-            $email = trim($data['email']);
-            $motDePasse = $data['mot_de_passe'];
-
-            // Verifications XSS
-            htmlspecialchars($email);
-            htmlspecialchars($motDePasse);
-
-            $login = new AuthModel();
-            $result = $login->login($email, $motDePasse);
-
-            if ($result) {
-                $_SESSION['user'] = [
-                    "id"    => $result['id'],
-                    "nom"   => $result['nom'],
-                    "email" => $result['email'],
-                    "role"  => $result['role']
-                ];
-
-                return [
-                    "success" => true,
-                    "message" => "Connexion réussie, {$_SESSION['user']['nom']}",
-                    "user"    => $_SESSION['user']
-                ];
-            } else {
-                return ["success" => false, "error" => "Email ou mot de passe incorrect"];
-            }
-        } catch (Exception $e) {
-            http_response_code(500);
-            return ["success" => false, "error" => $e->getMessage()];
+        if (!isset($data['email'], $data['mot_de_passe'])) {
+            return ["success" => false, "error" => "Données manquantes"];
         }
+        $email = htmlspecialchars(trim($data['email']));
+        $motDePasse = htmlspecialchars($data['mot_de_passe']);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return ["success" => false, "error" => "Email invalide"];
+        }
+        $auth = new AuthModel();
+        $result = $auth->login($email, $motDePasse);
+        if ($result) {
+            $_SESSION['user'] = [
+                "id"    => $result['id'],
+                "nom"   => $result['nom'],
+                "email" => $result['email'],
+                "role"  => $result['role']
+            ];
+            return ["success" => true, "user" => $_SESSION['user']];
+        }
+        return ["success" => false, "error" => "Email ou mot de passe incorrect"];
     }
 
+    // Logique métier d'enregistrement
     private function registerUser(): array {
-        try {
-            $data = json_decode(file_get_contents("php://input"), true);
+        $data = $this->getJsonInput();
 
-            if (!isset($data['nom'], $data['email'], $data['mot_de_passe'])) {
-                throw new Exception("Données manquantes");
-            }
-
-            $nom = trim($data['nom']);
-            $email = trim($data['email']);
-            $motDePasse = $data['mot_de_passe'];
-            $role = $data['role'] ?? "visiteur";
-
-            // Verifications XSS
-            htmlspecialchars($nom);
-            htmlspecialchars($email);
-            htmlspecialchars($motDePasse);
-
-            $signin = new AuthModel();
-
-            if ($signin->emailExists($email)) {
-                return [
-                    "success" => false,
-                    "error"   => "Cet email est déjà utilisé."
-                ];
-            }
-
-            $user = $signin->register($nom, $email, $motDePasse, $role);
-
-            if ($user) {
-                $_SESSION['user'] = [
-                    "id"    => $user['id'],
-                    "nom"   => $user['nom'],
-                    "email" => $user['email'],
-                    "role"  => $user['role']
-                ];
-
-                return [
-                    "success" => true,
-                    "message" => "Inscription réussie",
-                    "user"    => $_SESSION['user']
-                ];
-            } else {
-                return [
-                    "success" => false,
-                    "error"   => "Impossible d'enregistrer l'utilisateur"
-                ];
-            }
-
-        } catch (Exception $e) {
-            http_response_code(500);
-            return ["success" => false, "error" => $e->getMessage()];
+        if (!isset($data['nom'], $data['email'], $data['mot_de_passe'])) {
+            return ["success" => false, "error" => "Données manquantes"];
         }
+        $nom = htmlspecialchars(trim($data['nom']));
+        $email = htmlspecialchars(trim($data['email']));
+        $motDePasse = htmlspecialchars($data['mot_de_passe']);
+        $role = htmlspecialchars($data['role'] ?? "visiteur");
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return ["success" => false, "error" => "Email invalide"];
+        }
+        $auth = new AuthModel();
+        if ($auth->emailExists($email)) {
+            return ["success" => false, "error" => "Cet email est déjà utilisé."];
+        }
+        $user = $auth->register($nom, $email, $motDePasse, $role);
+        if ($user) {
+            $_SESSION['user'] = [
+                "id"    => $user['id'],
+                "nom"   => $user['nom'],
+                "email" => $user['email'],
+                "role"  => $user['role']
+            ];
+            return ["success" => true, "user" => $_SESSION['user']];
+        }
+        return ["success" => false, "error" => "Impossible d'enregistrer l'utilisateur"];
     }
 
-    public function logoutUser(): array {
+    // Déconnexion
+    public function logoutUser(): void {
         session_unset();
         session_destroy();
-        return [
-            "success" => true,
-            "message" => "Déconnexion réussie"
-        ];
+        http_response_code(200);
+        echo json_encode(["success" => true, "message" => "Déconnexion réussie"]);
+        exit();
     }
 
-    public function checkSession(): array {
+    // Vérification de session (profil utilisateur/admin)
+    public function checkSession(): void {
         if (isset($_SESSION['user'])) {
-            return [
-                "loggedIn" => true,
-                "user"     => $_SESSION['user']
-            ];
+            // Format spécial pour checkSession (pas enveloppé dans "data")
+            http_response_code(200);
+            echo json_encode(["loggedIn" => true, "user" => $_SESSION['user']]);
+            exit();
         } else {
-            return [
-                "loggedIn" => false
-            ];
+            http_response_code(200);
+            echo json_encode(["loggedIn" => false]);
+            exit();
         }
     }
 }
 
-
+// Le constructeur de BaseController configure automatiquement les CORS
 $controller = new AuthController();
 $action = $_GET['action'] ?? '';
 
-$response = match($action) {
-    'register' => $controller->handleRequestRegister(),
-    'login'    => $controller->handleRequestLogin(),
-    'check'    => $controller->checkSession(),
-    'logout'   => $controller->logoutUser(),
-    default    => [
-        "success" => false,
-        "error"   => "Action non reconnue. Utilisez ?action=register, ?action=login, ?action=check ou ?action=logout"
-    ]
-};
+switch ($action) {
+    case 'register':
+        $controller->handleRequestRegister();
+        break;
+    case 'login':
+        $controller->handleRequestLogin();
+        break;
+    case 'check':
+        $controller->checkSession();
+        break;
+    case 'logout':
+        $controller->logoutUser();
+        break;
+    default:
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Action non reconnue. Utilisez ?action=register, ?action=login, ?action=check ou ?action=logout'
+        ]);
+        break;
+}
 
-
-echo json_encode($response);

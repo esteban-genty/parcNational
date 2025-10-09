@@ -1,0 +1,58 @@
+# Dépendances
+node_modules/
+backend/vendor/
+
+# Fichiers de build
+frontend/dist/
+frontend/build/
+.vite/
+
+# Fichiers de config local
+.env
+.env.local
+backend/config/config.php
+
+# Fichiers IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Fichiers temporaires
+*.tmp
+*.temp
+*.session.sql
+oussama.session.sql
+
+# Documentation obsolète (archivée)
+CORRECTIONS-FINALES.md
+DEMARRAGE-RAPIDE.md
+EXPLICATION-useAPI.md
+GUIDE-CORRECTIONS.md
+GUIDE-DEBUTANT.md
+GUIDE-DEVELOPPEMENT.md
+GUIDE-LEAFLET.md
+NETTOYAGE-COMPLET.md
+RAPPORT-NETTOYAGE.md
+REFACTORISATION-SOLID.md
+RESUME-REFACTORISATION.md
+TODO-LIST-COMPLETE.md
+DOCUMENTATION-INDEX.md
+QUICKSTART-COLLABORATEURS.md
+COLLABORATION.md
+
+# Cache
+.cache/
+*.cache

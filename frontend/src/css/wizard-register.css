@@ -1,0 +1,119 @@
+/* Wizard CSS pour l'inscription interactive moderne */
+.wizard-register-container {
+  display: flex;
+  height: 100vh;
+  background: #fff;
+}
+.wizard-register-img {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee;
+  overflow: hidden;
+}
+.wizard-register-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-top-right-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+.wizard-register-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 48px;
+}
+.wizard-register-form form {
+  width: 100%;
+  max-width: 340px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px #0002;
+  padding: 32px 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.wizard-steps {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.wizard-step {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #eee;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  transition: background 0.3s;
+}
+.wizard-step.active {
+  background: #007aff;
+  color: #fff;
+  box-shadow: 0 0 8px #007aff88;
+}
+.wizard-field {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.wizard-field label {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.wizard-field input {
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border 0.2s;
+}
+.wizard-field input:focus {
+  border: 1.5px solid #007aff;
+}
+.wizard-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+.wizard-next, .wizard-prev, .wizard-submit {
+  padding: 10px 32px;
+  border-radius: 6px;
+  border: none;
+  background: #007aff;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.wizard-prev {
+  background: #aaa;
+}
+.wizard-next:hover, .wizard-submit:hover {
+  background: #005bb5;
+}
+.wizard-error {
+  color: #d32f2f;
+  font-size: 0.95rem;
+  margin-top: 8px;
+}
+.wizard-login {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 1rem;
+}
+.wizard-login a {
+  color: #007aff;
+  text-decoration: underline;
+}

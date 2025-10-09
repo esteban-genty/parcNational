@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import RegisterForm from "../components/RegisterForm";
+import WizardRegister from "../components/WizardRegister";
 import '../css/root.css'
 import '../css/register.css'
 
@@ -15,7 +15,7 @@ export default function RegisterPage({ setUser }) {
 
   return (
     <section className="register-section">
-      <RegisterForm setUser={setUser} /> 
+      <WizardRegister setUser={setUser} />
     </section>
   );
 }

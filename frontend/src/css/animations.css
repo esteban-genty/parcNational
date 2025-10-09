@@ -1,0 +1,278 @@
+/* ===== SYSTÈME D'ANIMATION FLUIDE ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Palette de couleurs naturelles du parc */
+  --parc-bleu: #1e4d7b;
+  --parc-turquoise: #2ea9c8;
+  --parc-vert: #3d7a5f;
+  --parc-sable: #d4a574;
+  --parc-blanc: #f8f9fa;
+  --parc-gris: #495057;
+  
+  /* Transitions fluides */
+  --transition-rapide: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normale: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-lente: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Ombres douces */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--parc-blanc) 0%, #e8f4f8 100%);
+  color: var(--parc-gris);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ===== ANIMATIONS KEYFRAMES ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ===== HEADER TRANSPARENT AU SCROLL ===== */
+.header-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: all var(--transition-normale);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-sm);
+}
+
+.header-fixed.scrolled {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-md);
+  padding: 0.5rem 0;
+}
+
+.header-fixed.transparent {
+  background: transparent;
+  box-shadow: none;
+}
+
+/* ===== CONTENEUR FLUIDE ===== */
+.container-fluid {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+/* ===== CARTES ANIMÉES ===== */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normale);
+  animation: scaleIn 0.6s ease-out;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ===== BOUTONS FLUIDES ===== */
+.btn {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-rapide);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--parc-bleu), var(--parc-turquoise));
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(30, 77, 123, 0.3);
+}
+
+/* ===== SCROLL SMOOTH AVEC INDICATEUR ===== */
+.scroll-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--parc-turquoise), var(--parc-vert));
+  z-index: 9999;
+  transition: width 0.1s ease;
+}
+
+/* ===== SECTIONS AVEC PARALLAX LÉGER ===== */
+.section {
+  padding: 4rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--parc-turquoise) 0%, transparent 70%);
+  opacity: 0.05;
+  animation: float 6s ease-in-out infinite;
+}
+
+/* ===== IMAGES FLUIDES ===== */
+.img-fluid {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  transition: all var(--transition-normale);
+}
+
+.img-fluid:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ===== GRILLE RESPONSIVE ===== */
+.grid {
+  display: grid;
+  gap: 2rem;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* ===== TEXTE ANIMÉ ===== */
+.text-gradient {
+  background: linear-gradient(135deg, var(--parc-bleu), var(--parc-turquoise));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.fade-in {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.8s ease-out forwards;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.8s ease-out forwards;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .container-fluid {
+    padding: 0 1rem;
+  }
+  
+  .section {
+    padding: 2rem 0;
+  }
+  
+  .card {
+    padding: 1.5rem;
+  }
+}

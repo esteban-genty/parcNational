@@ -1,0 +1,154 @@
+/* 🔔 STYLES POUR LES NOTIFICATIONS */
+
+.notifications-container {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notifications-container h3 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Message de chargement */
+.notifications-container .loading {
+  color: #666;
+  font-style: italic;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Message d'erreur */
+.notifications-container .error {
+  color: #d32f2f;
+  padding: 10px;
+  background: #ffebee;
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* Pas de notifications */
+.notifications-container .no-notifications {
+  color: #4caf50;
+  padding: 10px;
+  background: #e8f5e9;
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* Liste des notifications */
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+/* Item de notification */
+.notification-item {
+  padding: 12px 15px;
+  border-radius: 8px;
+  background: #f5f5f5;
+  border-left: 4px solid #2196f3;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.notification-item:hover {
+  background: #eeeeee;
+  transform: translateX(5px);
+}
+
+/* Notification non lue */
+.notification-item.unread {
+  background: #e3f2fd;
+  border-left-color: #1976d2;
+  font-weight: 500;
+}
+
+/* Notification lue */
+.notification-item.read {
+  background: #fafafa;
+  border-left-color: #bdbdbd;
+  opacity: 0.8;
+}
+
+/* Contenu de la notification */
+.notification-content {
+  flex: 1;
+}
+
+.notification-title {
+  margin: 0 0 5px 0;
+  color: #1976d2;
+  font-size: 1rem;
+}
+
+.notification-message {
+  margin: 0 0 5px 0;
+  color: #333;
+  line-height: 1.4;
+}
+
+.notification-date {
+  font-size: 0.85rem;
+  color: #757575;
+}
+
+/* Badge pour notifications non lues */
+.notification-badge {
+  color: #1976d2;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+/* Scrollbar personnalisée */
+.notifications-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notifications-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.notifications-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.notifications-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .notifications-container {
+    padding: 15px;
+  }
+
+  .notifications-list {
+    max-height: 300px;
+  }
+
+  .notification-item {
+    padding: 10px 12px;
+  }
+
+  .notification-message {
+    font-size: 0.9rem;
+  }
+
+  .notification-date {
+    font-size: 0.75rem;
+  }
+}
