@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/AuthMiddleware.php';
+require_once __DIR__ . '/AuthMiddelware.php';
 
 /**
  * Classe utilitaire pour la gestion des accès basés sur les rôles

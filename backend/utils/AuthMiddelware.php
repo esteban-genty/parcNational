@@ -16,7 +16,10 @@ class AuthMiddleware {
     public static function authenticate() {
         // 1️⃣ D'abord, vérifier si une session est active (priorité aux sessions)
         if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+            // Éviter session_start() si on est en mode test PHPUnit
+            if (getenv('PHPUNIT_RUNNING') !== '1') {
+                session_start();
+            }
         }
         
         // Si l'utilisateur est connecté via session

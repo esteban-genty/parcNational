@@ -110,6 +110,16 @@ class JWTHandler {
      * @return string|false
      */
     public static function getBearerToken() {
+        // Support pour les tests PHPUnit où getallheaders() n'existe pas
+        if (!function_exists('getallheaders')) {
+            if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+                if (preg_match('/Bearer\s+(.*)$/i', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
+                    return $matches[1];
+                }
+            }
+            return false;
+        }
+        
         $headers = getallheaders();
         
         if (isset($headers['Authorization'])) {
